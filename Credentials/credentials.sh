@@ -1,3 +1,5 @@
+#!/bin/bash
+
 setup_credentials() {
     cred_file="$(pwd)/Credentials/credentials.txt"
 
@@ -20,8 +22,6 @@ setup_credentials() {
 
     read -rp "Enter maximum JVM heap size (e.g., 2g) [default: 256m]: " HEAP_MAX
     HEAP_MAX=${HEAP_MAX:-256m}
-
-    echo ""
 
     warn "Configuring PHP settings..."
     
