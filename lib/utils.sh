@@ -99,10 +99,14 @@ progress_bar() {
     local prefix="$2"
     local width=20
     local progress=0
+    local interval=0.1
+
+    # Start time
+    local start_time=$(date +%s)
 
     while kill -0 "$pid" 2>/dev/null; do
         progress=$((progress + 2))
-        [[ $progress -gt 100 ]] && progress=100
+        [[ $progress -gt 98 ]] && progress=98  # cap at 98%, final 100% after completion
 
         local filled=$((progress * width / 100))
         local empty=$((width - filled))
@@ -112,9 +116,13 @@ progress_bar() {
         printf "%0.s░" $(seq 1 $empty)
         printf "] %3d%%" "$progress"
 
-        sleep 0.1
+        sleep $interval
     done
+
+    # Fill final bar to 100%
+    printf "\r%-35s [${GREEN}████████████████████${RESET}] 100%% " "$prefix"
 }
+
 
 run_step() {
     local message="$1"
@@ -126,19 +134,19 @@ run_step() {
     local tmp_out
     tmp_out=$(mktemp)
 
-    # Run all commands in a single subshell block, so the bar doesn't restart
+    # Run all commands in a subshell (single PID)
     (
         set +e
         "$@" >"$tmp_out" 2>&1
     ) &
     local pid=$!
 
+    # Show progress bar while process is running
     progress_bar "$pid" "$prefix"
+
+    # Wait for process to finish
     wait "$pid"
     local status=$?
-
-    # Fill final bar
-    printf "\r%-35s [${GREEN}████████████████████${RESET}] 100%% " "$prefix"
 
     if [[ $status -eq 0 ]]; then
         printf "${GREEN}✔${RESET}\n"
@@ -153,6 +161,7 @@ run_step() {
 
     rm -f "$tmp_out"
 }
+
 
 
 
