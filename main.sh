@@ -16,6 +16,7 @@ source ./php/php.sh
 source ./Elasticsearch/elasticsearch.sh
 source ./Redis/redis.sh
 source ./phpmyadmin/phpmyadmin.sh
+source ./Composer/composer.sh
 
 
 
@@ -47,15 +48,17 @@ setup_credentials
 
 #install_mysql
 
-install_phpmyadmin
-
 #install_php
+
+#install_phpmyadmin
 
 #install_elasticsearch
 
 #install_redis
 
-install_nginx
+install_composer
+
+#install_nginx
 
 # 8️⃣ Test Elasticsearch
     echo ""
