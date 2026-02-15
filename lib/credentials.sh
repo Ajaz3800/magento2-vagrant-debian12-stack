@@ -1,5 +1,5 @@
 setup_credentials() {
-    local cred_file="./lib/credentials.txt"
+    local cred_file="$(pwd)/lib/credentials.txt"
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
@@ -19,15 +19,11 @@ setup_credentials() {
 
     # Save to credentials.sh
     cat > "$cred_file" <<EOF
-#!/bin/bash
-
 export MYSQL_ROOT_PASS="$MYSQL_ROOT_PASS"
 export MYSQL_DB_NAME="$MYSQL_DB_NAME"
 export MYSQL_DB_USER="$MYSQL_DB_USER"
 export MYSQL_DB_PASS="$MYSQL_DB_PASS"
 EOF
-
-    chmod 600 "$cred_file"
 
     success "Credentials saved to $cred_file"
 }
