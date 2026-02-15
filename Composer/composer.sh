@@ -1,7 +1,7 @@
 #!/bin/bash
 
 install_composer() {
-    if command composer &> /dev/null; then
+    if command -v composer >/dev/null 2>&1; then
         success "Composer is already installed"
         return 0
     fi
