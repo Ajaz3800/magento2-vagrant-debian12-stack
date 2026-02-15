@@ -15,6 +15,7 @@ source ./Nginx/nginx.sh
 source ./php/php.sh
 source ./Elasticsearch/elasticsearch.sh
 source ./Redis/redis.sh
+source ./phpmyadmin/phpmyadmin.sh
 
 
 
@@ -46,13 +47,15 @@ setup_credentials
 
 #install_mysql
 
-#install_nginx
+install_phpmyadmin
 
 #install_php
 
-install_elasticsearch
+#install_elasticsearch
 
-install_redis
+#install_redis
+
+install_nginx
 
 # 8️⃣ Test Elasticsearch
     echo ""
@@ -64,20 +67,18 @@ install_redis
     fi
 
 # ✅ Check if Redis is running
-    run_step "Checking Redis service status" bash -c "
         if systemctl is-active --quiet redis-server; then
             exit 0
         else
-            echo 'Redis service is not running!' >&2
+            print "${RED}✖ Redis service is not running!${RESET}\n" >&2
             exit 1
         fi
-    "
 
     # Optional: test Redis CLI
     if redis-cli ping >/dev/null 2>&1; then
-        success "Redis is running and responding to commands"
+        printf "${GREEN}✔ Redis is running and responding to commands${RESET}\n"
     else
-        error "Redis is installed but not responding!"
+        printf "${RED}✖ Redis is installed but not responding!${RESET}\n"
         return 1
     fi
 
@@ -97,6 +98,39 @@ printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
     echo "User Password : $MYSQL_DB_PASS"
     echo "MySQL Root PW : $MYSQL_ROOT_PASS"
     echo "--------------------------------"
+
+# 6️⃣ Test phpMyAdmin
+
+
+
+local SERVER_IP
+SERVER_IP=$(hostname -I | awk '{print $1}')
+
+# Check nginx service first
+if systemctl is-active --quiet nginx; then
+
+    # Test phpMyAdmin endpoint
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost/phpmyadmin | grep -q "200"; then
+
+        printf "${GREEN}✔ phpMyAdmin is running!${RESET}\n"
+        echo "👉 Access phpMyAdmin in your browser:"
+        echo ""
+        echo "   http://localhost/phpmyadmin"
+        echo "   http://${SERVER_IP}/phpmyadmin"
+        echo ""
+        echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP."
+        echo ""
+
+    else
+        printf "${RED}✖ phpMyAdmin endpoint is not responding!${RESET}\n"
+        printf "${YELLOW}⚠ Check nginx config or PHP-FPM status.${RESET}\n"
+    fi
+
+else
+    printf "${RED}✖ Nginx service is not running!${RESET}\n"
+fi
+
+
 
 info "Script completed successfully"
 
