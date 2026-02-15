@@ -33,7 +33,6 @@ install_magento2() {
     run_step "Installing unzip" apt install -y unzip || return 1
 
     if run_step "Installing Magento 2 via Composer" bash -c "
-        export COMPOSER_ALLOW_SUPERUSER=1
         composer create-project \
         --repository-url=https://repo.magento.com/ \
         magento/project-community-edition=$MAG_VER \
