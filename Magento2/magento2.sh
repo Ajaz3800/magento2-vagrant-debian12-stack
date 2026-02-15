@@ -4,9 +4,10 @@ install_magento2() {
 
     local MAGENTO_DIR="/var/www/html/magento2"
 
-    if [[ -d "$MAGENTO_DIR" ]]; then
-        success "Magento 2 is already installed"
-        return
+    if [[ -f "$MAGENTO_DIR/app/etc/env.php" ]] && \
+       php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
+       success "Magento 2 is already installed and working"
+       return
     fi
 
     warn "Magento 2 is not installed. Installing now..."
