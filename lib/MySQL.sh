@@ -25,7 +25,7 @@ install_mysql() {
     mysql <<MYSQL_ROOT
 ALTER USER 'root'@'localhost'
 IDENTIFIED WITH caching_sha2_password
-BY '$ROOT_PASS';
+BY '$MYSQL_ROOT_PASS';
 FLUSH PRIVILEGES;
 MYSQL_ROOT
 
@@ -38,10 +38,10 @@ MYSQL_ROOT
 
      # 4️⃣ Create database + user
     warn "Creating database and user..."
-    mysql -u root -p"$ROOT_PASS" <<MYSQL_SCRIPT
-CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
-CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
-GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'localhost';
+    mysql -u root -p"$MYSQL_ROOT_PASS" <<MYSQL_SCRIPT
+CREATE DATABASE IF NOT EXISTS \`$MYSQL_DB_NAME\`;
+CREATE USER IF NOT EXISTS '$MYSQL_DB_USER'@'localhost' IDENTIFIED BY '$MYSQL_DB_PASS';
+GRANT ALL PRIVILEGES ON \`$MYSQL_DB_NAME\`.* TO '$MYSQL_DB_USER'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
