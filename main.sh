@@ -7,12 +7,12 @@ source ./lib/logger.sh
 source ./lib/utils.sh
 
 # Credentials management
-source ./lib/credentials.sh
+source ./credentials/credentials.sh
 
 # package installation functions
-source ./lib/MySQL.sh
-source ./lib/nginx.sh
-source ./lib/php.sh
+source ./mysql/MySQL.sh
+source ./nginx/nginx.sh
+source ./php/php.sh
 
 
 
