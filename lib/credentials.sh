@@ -1,5 +1,5 @@
 setup_credentials() {
-    local cred_file="$(pwd)/lib/credentials.txt"
+    cred_file="$(pwd)/lib/credentials.txt"
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
