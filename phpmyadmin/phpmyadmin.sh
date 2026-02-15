@@ -5,7 +5,7 @@ install_phpmyadmin() {
     local PMA_VERSION="latest"
     local PMA_URL="https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz"
     local PMA_TAR="/tmp/phpmyadmin.tar.gz"
-    local PMA_DIR="/usr/share/phpmyadmin"
+    local PMA_DIR=$(find /usr/share/phpmyadmin -maxdepth 1 -type d -name "phpMyAdmin-*" | head -n 1)
     local TMP_DIR="/var/lib/phpmyadmin/tmp"
 
     if [[ -d "$PMA_DIR" ]]; then
@@ -33,11 +33,25 @@ install_phpmyadmin() {
     " || return 1
 
     # 4️⃣ Create config file
-    run_step "Configuring phpMyAdmin" bash -c "
-        cp $PMA_DIR/config.sample.inc.php $PMA_DIR/config.inc.php &&
-        sed -i \"s|\\\$cfg\\['blowfish_secret'\\] = '';|\\\$cfg['blowfish_secret'] = '$(openssl rand -base64 32)';|\" $PMA_DIR/config.inc.php &&
-        sed -i \"s|\\\$cfg\\['TempDir'\\].*|\\\$cfg['TempDir'] = '$TMP_DIR';|\" $PMA_DIR/config.inc.php
-    " || return 1
+
+    
+    if [[ -z "$PMA_DIR" ]]; then
+        error "phpMyAdmin directory not found!"
+        return 1
+    fi
+
+    # Create stable symlink
+    ln -sfn "$PMA_DIR" /usr/share/phpmyadmin/current
+    PMA_DIR="/usr/share/phpmyadmin/current"
+
+    # Copy config
+    if cp "$PMA_DIR/config.sample.inc.php" "$PMA_DIR/config.inc.php"; then
+        success "phpMyAdmin configured successfully"
+    else
+        error "Failed to configure phpMyAdmin"
+        return 1
+    fi
+
 
     # 5️⃣ Permissions
     run_step "Setting permissions" bash -c "
