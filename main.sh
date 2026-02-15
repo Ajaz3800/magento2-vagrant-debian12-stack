@@ -6,6 +6,9 @@ source ./lib/colors.sh
 source ./lib/logger.sh
 source ./lib/utils.sh
 
+# Credentials management
+source ./lib/credentials.sh
+
 # package installation functions
 source ./lib/MySQL.sh
 source ./lib/nginx.sh
@@ -33,6 +36,8 @@ info "Updating system packages..."
 retry 3 apt-get update
 
 success "System updated successfully"
+
+setup_credentials
 
 install_mysql
 
