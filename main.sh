@@ -21,27 +21,32 @@ set -euo pipefail
 
 trap 'error "Script failed at line ${LINENO}"' ERR
 
+init_steps 3
+
 require_root
 check_network
 
-info "Starting installation process..."
+#info "Starting installation process..."
 
 check_command wget
 check_command curl
 
-success "All dependencies are available"
+#success "All dependencies are available"
 
-info "Updating system packages..."
+#info "Updating system packages..."
 
-retry 3 apt-get update
+run_step "Updating system packages" retry 3 apt-get update
 
 success "System updated successfully"
 
 setup_credentials
 
-install_mysql
+run_step "Installing MySQL" install_mysql
 
-install_nginx
+run_step "Installing Nginx" install_nginx
+
+echo ""
+printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
 
 # ✅ Show summary
     echo ""
