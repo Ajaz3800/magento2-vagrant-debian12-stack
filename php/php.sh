@@ -18,7 +18,7 @@ install_php() {
 
     # Install PHP + common extensions
     # You can add more extensions as per your needs
-    local extensions=(php${PHP_VER} php${PHP_VER}-fpm php${PHP_VER}-cli php${PHP_VER}-common php${PHP_VER}-mysql php${PHP_VER}-curl php${PHP_VER}-gd php${PHP_VER}-mbstring php${PHP_VER}-xml php${PHP_VER}-bcmath php${PHP_VER}-intl php${PHP_VER}-soap php${PHP_VER}-zip php${PHP_VER}-gd php${PHP_VER}-xmlrpc php${PHP_VER}-gmp)
+    local extensions=(php${PHP_VER} php${PHP_VER}-fpm php${PHP_VER}-cli php${PHP_VER}-common php${PHP_VER}-mysql php${PHP_VER}-mysqli php${PHP_VER}-curl php${PHP_VER}-gd php${PHP_VER}-mbstring php${PHP_VER}-xml php${PHP_VER}-bcmath php${PHP_VER}-intl php${PHP_VER}-soap php${PHP_VER}-zip php${PHP_VER}-gd php${PHP_VER}-xmlrpc php${PHP_VER}-gmp php${PHP_VER}-cgi php-pear php-phpseclib)
 
     if run_step "Installing PHP $PHP_VER and extensions" retry 3 apt-get install -y "${extensions[@]}"; then
         phpenmod mbstring
