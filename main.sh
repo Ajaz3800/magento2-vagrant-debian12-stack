@@ -134,6 +134,10 @@ else
     error "✖ Nginx service is not running!"
 fi
 
+    echo ""
+    echo "👉 Admin panel:"
+    echo "$BASE_URL/admin"
+    echo ""
 
 
 info "Script completed successfully"
