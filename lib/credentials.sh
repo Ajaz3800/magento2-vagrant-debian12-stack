@@ -1,15 +1,15 @@
 setup_credentials() {
     cred_file="$(pwd)/lib/credentials.txt"
-
+    
+    # 1️⃣ Ask user for PHP version
+    read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3): " PHP_VER
+    
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
         warn "Loading existing credentials..."
         source "$cred_file"
         return 0
     fi
-
-    # 1️⃣ Ask user for PHP version
-    read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3): " PHP_VER
 
     warn "Creating credentials file..."
 
