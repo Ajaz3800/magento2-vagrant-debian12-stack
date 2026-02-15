@@ -21,7 +21,7 @@ set -euo pipefail
 
 trap 'error "Script failed at line ${LINENO}"' ERR
 
-init_steps 3
+init_steps 4
 
 require_root
 check_network
