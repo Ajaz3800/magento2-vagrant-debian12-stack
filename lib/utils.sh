@@ -101,24 +101,20 @@ progress_bar() {
     local progress=0
 
     while kill -0 "$pid" 2>/dev/null; do
-        progress=$(( (progress + 2) % 101 ))
+        progress=$((progress + 2))
+        [[ $progress -gt 100 ]] && progress=100
 
         local filled=$((progress * width / 100))
         local empty=$((width - filled))
 
         printf "\r%-35s [" "$prefix"
-
         printf "${GREEN}%0.s█${RESET}" $(seq 1 $filled)
         printf "%0.s░" $(seq 1 $empty)
-
         printf "] %3d%%" "$progress"
 
         sleep 0.1
     done
 }
-
-
-
 
 run_step() {
     local message="$1"
@@ -130,15 +126,18 @@ run_step() {
     local tmp_out
     tmp_out=$(mktemp)
 
-    # Run command in foreground so set -e works properly
-    "$@" >"$tmp_out" 2>&1 &
+    # Run all commands in a single subshell block, so the bar doesn't restart
+    (
+        set +e
+        "$@" >"$tmp_out" 2>&1
+    ) &
     local pid=$!
 
     progress_bar "$pid" "$prefix"
-
     wait "$pid"
     local status=$?
 
+    # Fill final bar
     printf "\r%-35s [${GREEN}████████████████████${RESET}] 100%% " "$prefix"
 
     if [[ $status -eq 0 ]]; then
@@ -146,7 +145,7 @@ run_step() {
     else
         printf "${RED}✖${RESET}\n"
         echo ""
-        echo "${RED}[ERROR]${RESET} Command failed with the following output:"
+        echo "${RED}[ERROR]${RESET} Command failed with output:"
         cat "$tmp_out"
         rm -f "$tmp_out"
         exit 1
@@ -154,6 +153,7 @@ run_step() {
 
     rm -f "$tmp_out"
 }
+
 
 
 
