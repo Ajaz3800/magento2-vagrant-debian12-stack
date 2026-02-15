@@ -9,7 +9,7 @@ install_mysql() {
 
         local mysql_repo_pkg="/tmp/mysql-apt-config.deb"
 
-        run_step "Downloading MySQL APT config package" retry 3 wget -qO "$mysql_repo_pkg" \
+        retry 3 wget -qO "$mysql_repo_pkg" \
             https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb || return 1
 
         export DEBIAN_FRONTEND=noninteractive
