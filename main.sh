@@ -14,6 +14,7 @@ source ./MySQL/MySQL.sh
 source ./Nginx/nginx.sh
 source ./php/php.sh
 source ./Elasticsearch/elasticsearch.sh
+source ./Redis/redis.sh
 
 
 
@@ -50,6 +51,35 @@ setup_credentials
 #install_php
 
 install_elasticsearch
+
+install_redis
+
+# 8️⃣ Test Elasticsearch
+    echo ""
+    info "Checking Elasticsearch status..."
+    if curl -s -X GET "http://$NETWORK_HOST:$HTTP_PORT" | grep -q "cluster_name"; then
+        printf "${GREEN}✔ Elasticsearch is running!${RESET}\n"
+    else
+        printf "${RED}✖ Elasticsearch is not responding!${RESET}\n"
+    fi
+
+# ✅ Check if Redis is running
+    run_step "Checking Redis service status" bash -c "
+        if systemctl is-active --quiet redis-server; then
+            exit 0
+        else
+            echo 'Redis service is not running!' >&2
+            exit 1
+        fi
+    "
+
+    # Optional: test Redis CLI
+    if redis-cli ping >/dev/null 2>&1; then
+        success "Redis is running and responding to commands"
+    else
+        error "Redis is installed but not responding!"
+        return 1
+    fi
 
 echo ""
 printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
