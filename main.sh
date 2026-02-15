@@ -7,12 +7,13 @@ source ./lib/logger.sh
 source ./lib/utils.sh
 
 # Credentials management
-source ./credentials/credentials.sh
+source ./Credentials/credentials.sh
 
 # package installation functions
-source ./mysql/MySQL.sh
-source ./nginx/nginx.sh
+source ./MySQL/MySQL.sh
+source ./Nginx/nginx.sh
 source ./php/php.sh
+source ./Elasticsearch/elasticsearch.sh
 
 
 
@@ -46,7 +47,9 @@ setup_credentials
 
 #install_nginx
 
-install_php
+#install_php
+
+install_elasticsearch
 
 echo ""
 printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
