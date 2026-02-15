@@ -1,16 +1,6 @@
 #!/bin/bash
 
 install_mysql() {
-    warn "MySQL 8 Setup wizard..."
-
-    # 1️⃣ Ask user inputs
-    read -rsp "Enter MySQL ROOT password: " ROOT_PASS
-    echo ""
-    read -rp "Enter database name: " DB_NAME
-    read -rp "Enter username: " DB_USER
-    read -rsp "Enter user password: " DB_PASS
-    echo ""
-
     # Skip if MySQL 8 exists
     if command -v mysql >/dev/null 2>&1 && mysql --version | grep -qE "Ver 8\."; then
         success "MySQL 8 is already installed"
@@ -33,7 +23,9 @@ install_mysql() {
  # 3️⃣ Configure MySQL root password
     warn "Configuring MySQL root user..."
     mysql <<MYSQL_ROOT
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$ROOT_PASS';
+ALTER USER 'root'@'localhost'
+IDENTIFIED WITH caching_sha2_password
+BY '$ROOT_PASS';
 FLUSH PRIVILEGES;
 MYSQL_ROOT
 
