@@ -41,5 +41,56 @@ install_magento2() {
     else
         error "Failed to install Magento 2"
         return 1
+    fi.
+
+    # -----------Permissions------------
+
+    run_step "Setting Magento permissions" bash -c "
+        cd \"$MAGENTO_DIR\" &&
+        find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + &&
+        find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + &&
+        chown -R www-data:www-data . &&
+        chmod u+x bin/magento
+    " || return 1
+
+    # ----------Magento setup install-----------
+
+    if ! run_step "Running Magento setup install" bash -c "
+        cd \"$MAGENTO_DIR\" &&
+        php bin/magento setup:install \
+        --base-url=\"$BASE_URL\" \
+        --db-host=localhost \
+        --db-name=\"$MYSQL_DB_NAME\" \
+        --db-user=\"$MYSQL_DB_USER\" \
+        --db-password=\"$MYSQL_DB_PASS\" \
+        --admin-firstname=Admin \
+        --admin-lastname=Admin \
+        --admin-email=admin@admin.com \
+        --admin-user=\"$ADMIN_USER\" \
+        --admin-password=\"$ADMIN_PASS\" \
+        --language=en_US \
+        --currency=USD \
+        --timezone=America/Chicago \
+        --backend-frontname=admin \
+        --search-engine=elasticsearch7 \
+        --elasticsearch-host=127.0.0.1 \
+        --elasticsearch-port=9200 \
+        --cache-backend=redis \
+        --cache-backend-redis-server=127.0.0.1 \
+        --cache-backend-redis-db=0 \
+        --page-cache=redis \
+        --page-cache-redis-server=127.0.0.1 \
+        --page-cache-redis-db=1 \
+        --session-save=redis \
+        --session-save-redis-host=127.0.0.1 \
+        --session-save-redis-db=2
+    "
+    then
+        success "Magento setup completed successfully!"
+    else
+        error "Magento setup failed"
+        return 1
     fi
+
+    success "Magento 2 installed successfully!"
 }
