@@ -50,12 +50,28 @@ setup_credentials() {
     read -rsp "Enter user password: " MYSQL_DB_PASS
     echo ""
 
+    echo ""
+    warn "Magento setup configuration"
+
+    read -rp "Base URL [http://test.com]: " BASE_URL
+    BASE_URL=${BASE_URL:-http://test.com}
+
+    read -rp "Admin username [admin]: " ADMIN_USER
+    ADMIN_USER=${ADMIN_USER:-admin}
+
+    read -rsp "Admin password [admin@123]: " ADMIN_PASS
+    ADMIN_PASS=${ADMIN_PASS:-admin@123}
+    echo ""
+
     # Save to credentials.sh
     cat > "$cred_file" <<EOF
 export MYSQL_ROOT_PASS="$MYSQL_ROOT_PASS"
 export MYSQL_DB_NAME="$MYSQL_DB_NAME"
 export MYSQL_DB_USER="$MYSQL_DB_USER"
 export MYSQL_DB_PASS="$MYSQL_DB_PASS"
+export BASE_URL="$BASE_URL"
+export ADMIN_USER="$ADMIN_USER"
+export ADMIN_PASS="$ADMIN_PASS"
 EOF
 
     success "Credentials saved to $cred_file"
