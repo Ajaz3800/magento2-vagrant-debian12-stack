@@ -37,7 +37,7 @@ install_phpmyadmin() {
 
     # 4️⃣ Create stable symlink
     run_step "Moving files to phpmyadmin" \
-        mv "$EXTRACTED_DIR/*" "$BASE_DIR/phpmyadmin" || return 1
+        mv "$EXTRACTED_DIR" "$BASE_DIR/phpmyadmin" || return 1
 
     local PMA_DIR="$BASE_DIR/phpmyadmin"
 
