@@ -12,6 +12,7 @@ source ./lib/credentials.sh
 # package installation functions
 source ./lib/MySQL.sh
 source ./lib/nginx.sh
+source ./lib/php.sh
 
 
 
