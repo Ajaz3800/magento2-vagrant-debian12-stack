@@ -61,29 +61,27 @@ install_nginx
     echo ""
     info "Checking Elasticsearch status..."
     if curl -s -X GET "http://$NETWORK_HOST:$HTTP_PORT" | grep -q "cluster_name"; then
-        printf "${GREEN}✔ Elasticsearch is running!${RESET}\n"
+        success "✔ Elasticsearch is running!"
     else
-        printf "${RED}✖ Elasticsearch is not responding!${RESET}\n"
+        error "✖ Elasticsearch is not responding!"
     fi
 
 # ✅ Check if Redis is running
     if systemctl is-active --quiet redis-server; then
-        exit 0
+        success "✔ Redis service is running!"
     else
-        print "${RED}✖ Redis service is not running!${RESET}\n" >&2
-        exit 1
+        error "✖ Redis service is not running!"
     fi
 
     # Optional: test Redis CLI
     if redis-cli ping >/dev/null 2>&1; then
-        printf "${GREEN}✔ Redis is running and responding to commands${RESET}\n"
+        success "✔ Redis is running and responding to commands"
     else
-        printf "${RED}✖ Redis is installed but not responding!${RESET}\n"
-        return 1
+        error "✖ Redis is installed but not responding!"
     fi
 
 echo ""
-printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
+success "✔ Installation completed successfully!"
 
 # ✅ Show summary
     echo ""
@@ -112,7 +110,7 @@ if systemctl is-active --quiet nginx; then
     # Test phpMyAdmin endpoint
     if curl -s -o /dev/null -w "%{http_code}" http://localhost/phpmyadmin | grep -q "200"; then
 
-        printf "${GREEN}✔ phpMyAdmin is running!${RESET}\n"
+        success "✔ phpMyAdmin is running!"
         echo "👉 Access phpMyAdmin in your browser:"
         echo ""
         echo "   http://localhost/phpmyadmin"
@@ -122,12 +120,12 @@ if systemctl is-active --quiet nginx; then
         echo ""
 
     else
-        printf "${RED}✖ phpMyAdmin endpoint is not responding!${RESET}\n"
-        printf "${YELLOW}⚠ Check nginx config or PHP-FPM status.${RESET}\n"
+        error "✖ phpMyAdmin endpoint is not responding!"
+        warn "⚠ Check nginx config or PHP-FPM status."
     fi
 
 else
-    printf "${RED}✖ Nginx service is not running!${RESET}\n"
+    error "✖ Nginx service is not running!"
 fi
 
 
