@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 install_phpmyadmin() {
 
     local PMA_URL="https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz"
@@ -21,45 +19,39 @@ install_phpmyadmin() {
     run_step "Downloading phpMyAdmin" \
         retry 3 wget -qO "$PMA_TAR" "$PMA_URL" || return 1
 
-    # 2️⃣ Extract to temp location
+    # 2️⃣ Extract directly into BASE_DIR
     run_step "Extracting phpMyAdmin" bash -c "
         set -e
-        mkdir -p $BASE_DIR
-        tar xzf $PMA_TAR -C /usr/share
+        mkdir -p \"$BASE_DIR\"
+        tar xzf \"$PMA_TAR\" -C \"$BASE_DIR\"
     " || return 1
 
     # 3️⃣ Detect extracted folder
     local EXTRACTED_DIR
-    EXTRACTED_DIR=$(find /usr/share -maxdepth 1 -type d -name "phpMyAdmin-*" | head -n 1)
+    EXTRACTED_DIR=$(find "$BASE_DIR" -maxdepth 1 -type d -name "phpMyAdmin-*" | head -n 1)
 
     if [[ -z "$EXTRACTED_DIR" ]]; then
         error "Extraction failed: phpMyAdmin folder not found"
         return 1
     fi
 
-    # 4️⃣ Move to stable location
-    run_step "Organizing phpMyAdmin files" bash -c "
-        set -e
-        mv \"$EXTRACTED_DIR\" \"$BASE_DIR/\"
-        ln -sfn \"$BASE_DIR/$(basename "$EXTRACTED_DIR")\" \"$BASE_DIR/current\"
-    " || return 1
+    # 4️⃣ Create stable symlink
+    run_step "Creating stable symlink" \
+        ln -sfn "$EXTRACTED_DIR" "$BASE_DIR/current" || return 1
 
     local PMA_DIR="$BASE_DIR/current"
 
-    # 5️⃣ Create temp dir
+    # 5️⃣ Create temp directory
     run_step "Creating temp directory" bash -c "
-        mkdir -p $TMP_DIR
-        chown -R www-data:www-data $TMP_DIR
-        chmod 700 $TMP_DIR
+        mkdir -p \"$TMP_DIR\"
+        chown -R www-data:www-data \"$TMP_DIR\"
+        chmod 700 \"$TMP_DIR\"
     " || return 1
 
-    # 6️⃣ Config file
-    if cp "$PMA_DIR/config.sample.inc.php" "$PMA_DIR/config.inc.php"; then
-        success "phpMyAdmin config created"
-    else
-        error "Failed to create phpMyAdmin config"
-        return 1
-    fi
+    # 6️⃣ Create config file
+    run_step "Configuring phpMyAdmin" bash -c "
+        cp \"$PMA_DIR/config.sample.inc.php\" \"$PMA_DIR/config.inc.php\"
+    " || return 1
 
     # 7️⃣ Permissions
     run_step "Setting permissions" bash -c "
