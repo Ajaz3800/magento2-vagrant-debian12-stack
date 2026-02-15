@@ -15,8 +15,8 @@ install_mysql() {
         export DEBIAN_FRONTEND=noninteractive
         dpkg -i "$mysql_repo_pkg" >/dev/null 2>&1
 
-        run_with_spinner "Updating package list" retry 3 apt-get update || return 1
-        run_with_spinner "Installing MySQL server" retry 3 apt-get install -y mysql-server || return 1
+        retry 3 apt-get update || return 1
+        retry 3 apt-get install -y mysql-server || return 1
 
         success "MySQL 8 installed successfully"
     fi
