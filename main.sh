@@ -43,6 +43,20 @@ install_mysql
 
 install_nginx
 
+# ✅ Show summary
+    echo ""
+    info "Credentials file location:"
+    echo "👉 $cred_file"
+    echo ""
+
+    info "Saved credentials:"
+    echo "--------------------------------"
+    echo "Database Name : $MYSQL_DB_NAME"
+    echo "Username      : $MYSQL_DB_USER"
+    echo "User Password : $MYSQL_DB_PASS"
+    echo "MySQL Root PW : $MYSQL_ROOT_PASS"
+    echo "--------------------------------"
+
 info "Script completed successfully"
 
 }
