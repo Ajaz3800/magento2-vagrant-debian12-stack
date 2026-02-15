@@ -67,12 +67,12 @@ install_nginx
     fi
 
 # ✅ Check if Redis is running
-        if systemctl is-active --quiet redis-server; then
-            exit 0
-        else
-            print "${RED}✖ Redis service is not running!${RESET}\n" >&2
-            exit 1
-        fi
+    if systemctl is-active --quiet redis-server; then
+        exit 0
+    else
+        print "${RED}✖ Redis service is not running!${RESET}\n" >&2
+        exit 1
+    fi
 
     # Optional: test Redis CLI
     if redis-cli ping >/dev/null 2>&1; then
