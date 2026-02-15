@@ -18,7 +18,7 @@ install_nginx() {
 
 
     # 2️⃣ Copy phpMyAdmin config (ALWAYS run)
-    local src_config="./config/phpmyadmin.conf"
+    local src_config="./Nginx/config/phpmyadmin.conf"
     local dest_config="/etc/nginx/sites-available/phpmyadmin.conf"
     local enabled_config="/etc/nginx/sites-enabled/phpmyadmin.conf"
 
