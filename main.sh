@@ -21,7 +21,7 @@ set -euo pipefail
 
 trap 'error "Script failed at line ${LINENO}"' ERR
 
-init_steps 4
+init_steps 10
 
 require_root
 check_network
@@ -41,11 +41,11 @@ success "System updated successfully"
 
 setup_credentials
 
-run_step "Installing MySQL" install_mysql
+install_mysql
 
-run_step "Installing Nginx" install_nginx
+install_nginx
 
-run_step "Installing PHP" install_php
+install_php
 
 echo ""
 printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
