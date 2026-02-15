@@ -4,11 +4,11 @@ install_phpmyadmin() {
 
     local PMA_URL="https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz"
     local PMA_TAR="/tmp/phpmyadmin.tar.gz"
-    local BASE_DIR="/var/www/html/phpmyadmin"
+    local BASE_DIR="/var/www/html"
     local TMP_DIR="/var/lib/phpmyadmin/tmp"
 
     # Detect existing install
-    if [[ -d "$BASE_DIR/current" ]]; then
+    if [[ -d "$BASE_DIR/phpmyadmin" ]]; then
         success "phpMyAdmin is already installed"
         return 0
     fi
@@ -36,17 +36,17 @@ install_phpmyadmin() {
     fi
 
     # 4️⃣ Create stable symlink
-    run_step "Creating stable symlink" \
-        ln -sfn "$EXTRACTED_DIR" "$BASE_DIR/current" || return 1
+    run_step "Moving files to phpmyadmin" \
+        mv "$EXTRACTED_DIR/*" "$BASE_DIR/phpmyadmin" || return 1
 
-    local PMA_DIR="$BASE_DIR/current"
+    local PMA_DIR="$BASE_DIR/phpmyadmin"
 
-    # 5️⃣ Create temp directory
-    run_step "Creating temp directory" bash -c "
-        mkdir -p \"$TMP_DIR\"
-        chown -R www-data:www-data \"$TMP_DIR\"
-        chmod 700 \"$TMP_DIR\"
-    " || return 1
+    # # 5️⃣ Create temp directory
+    # run_step "Creating temp directory" bash -c "
+    #     mkdir -p \"$TMP_DIR\"
+    #     chown -R www-data:www-data \"$TMP_DIR\"
+    #     chmod 700 \"$TMP_DIR\"
+    # " || return 1
 
     # 6️⃣ Create config file
     run_step "Configuring phpMyAdmin" bash -c "
