@@ -35,6 +35,8 @@ install_elasticsearch() {
     sudo sed -i "/^cluster.name:/d" "$es_config"
     sudo sed -i "/^network.host:/d" "$es_config"
     sudo sed -i "/^http.port:/d" "$es_config"
+    sudo sed -i "/^xpack.security.enabled/d" "$es_config"
+    sudo sed -i "/^xpack.security.enrollment.enabled:/d" "$es_config"
 
     # Append user settings
     {
@@ -42,6 +44,8 @@ install_elasticsearch() {
         echo "cluster.name: $CLUSTER_NAME"
         echo "network.host: $NETWORK_HOST"
         echo "http.port: $HTTP_PORT"
+        echo "xpack.security.enabled: false"
+        echo "xpack.security.enrollment.enabled: false"
     } | sudo tee -a "$es_config" >/dev/null
 
     # 7️⃣ Configure JVM heap size
