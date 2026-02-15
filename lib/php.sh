@@ -11,6 +11,9 @@ install_php() {
     warn "Installing PHP $PHP_VER..."
 
     # Update repo
+    run_step "Adding PHP repository" retry 3 apt-get install -y lsb-release apt-transport-https ca-certificates wget gnupg || return 1
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg > /dev/null 2>&1
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list || return 1
     run_step "Updating APT cache" retry 3 apt-get update || return 1
 
     # Install PHP + common extensions
