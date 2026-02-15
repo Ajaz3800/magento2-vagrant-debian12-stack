@@ -8,6 +8,9 @@ setup_credentials() {
         return 0
     fi
 
+    # 1️⃣ Ask user for PHP version
+    read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3): " PHP_VER
+
     warn "Creating credentials file..."
 
     read -rsp "Enter MySQL ROOT password: " MYSQL_ROOT_PASS
