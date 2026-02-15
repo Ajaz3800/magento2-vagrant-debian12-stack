@@ -67,14 +67,4 @@ install_elasticsearch() {
         sudo systemctl daemon-reload &&
         sudo systemctl restart elasticsearch.service
     "
-
-    # 8️⃣ Test Elasticsearch
-    echo ""
-    info "Checking Elasticsearch status..."
-    if curl -s -X GET "http://$NETWORK_HOST:$HTTP_PORT" | grep -q "cluster_name"; then
-        printf "${GREEN}✔ Elasticsearch is running!${RESET}\n"
-    else
-        printf "${RED}✖ Elasticsearch is not responding!${RESET}\n"
-    fi
-
 }
