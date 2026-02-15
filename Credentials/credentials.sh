@@ -29,6 +29,11 @@ setup_credentials() {
     read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3): " PHP_VER
     echo ""
 
+    warn "Magento2 version selection..."
+    read -rp "Enter magento version (e.g., 2.4.6, 2.4.7) [default: 2.4.7]: " MAG_VER
+    MAG_VER=${MAG_VER:-2.4.7}
+    echo ""
+
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
         warn "Loading existing credentials..."
