@@ -17,6 +17,7 @@ source ./Elasticsearch/elasticsearch.sh
 source ./Redis/redis.sh
 source ./phpmyadmin/phpmyadmin.sh
 source ./Composer/composer.sh
+source ./Magento2/magento2.sh
 
 
 
@@ -44,7 +45,7 @@ run_step "Updating system packages" retry 3 apt-get update
 
 success "System updated successfully"
 
-#setup_credentials
+setup_credentials
 
 #install_mysql
 
@@ -57,6 +58,8 @@ success "System updated successfully"
 #install_redis
 
 install_composer
+
+install_magento2
 
 #install_nginx
 
