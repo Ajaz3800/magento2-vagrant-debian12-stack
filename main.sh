@@ -41,9 +41,9 @@ success "System updated successfully"
 
 setup_credentials
 
-install_mysql
+#install_mysql
 
-install_nginx
+#install_nginx
 
 install_php
 
