@@ -127,16 +127,15 @@ run_step() {
     CURRENT_STEP=$((CURRENT_STEP + 1))
     local prefix="[${CURRENT_STEP}/${TOTAL_STEPS}] $message"
 
-    # Run the command in background, capture stdout/stderr in temp file
     local tmp_out
     tmp_out=$(mktemp)
 
-    set +e
+    # Run command in foreground so set -e works properly
     "$@" >"$tmp_out" 2>&1 &
     local pid=$!
-    set -e
 
     progress_bar "$pid" "$prefix"
+
     wait "$pid"
     local status=$?
 
@@ -146,7 +145,6 @@ run_step() {
         printf "${GREEN}✔${RESET}\n"
     else
         printf "${RED}✖${RESET}\n"
-        # Print captured error output
         echo ""
         echo "${RED}[ERROR]${RESET} Command failed with the following output:"
         cat "$tmp_out"
@@ -156,6 +154,7 @@ run_step() {
 
     rm -f "$tmp_out"
 }
+
 
 
 
