@@ -125,11 +125,14 @@ run_step() {
     shift
 
     CURRENT_STEP=$((CURRENT_STEP + 1))
-
     local prefix="[${CURRENT_STEP}/${TOTAL_STEPS}] $message"
 
+    # Run the command in background, capture stdout/stderr in temp file
+    local tmp_out
+    tmp_out=$(mktemp)
+
     set +e
-    "$@" >/dev/null 2>&1 &
+    "$@" >"$tmp_out" 2>&1 &
     local pid=$!
     set -e
 
@@ -143,8 +146,15 @@ run_step() {
         printf "${GREEN}✔${RESET}\n"
     else
         printf "${RED}✖${RESET}\n"
+        # Print captured error output
+        echo ""
+        echo "${RED}[ERROR]${RESET} Command failed with the following output:"
+        cat "$tmp_out"
+        rm -f "$tmp_out"
         exit 1
     fi
+
+    rm -f "$tmp_out"
 }
 
 
