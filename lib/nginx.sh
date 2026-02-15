@@ -8,7 +8,7 @@ install_nginx() {
 
     warn "Nginx is not installed. I'm going to install it now."
 
-    if run_with_spinner "Installing Nginx" retry 3 apt-get install -y nginx; then
+    if retry 3 apt-get install -y nginx; then
         success "Nginx installed successfully"
     else
         error "Failed to install Nginx"
