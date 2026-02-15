@@ -84,25 +84,70 @@ fi
 
 }
 
-# ---------- Spinner ----------
+# ---------- Progress Installer Framework ----------
 
-spinner() {
-local pid=$1
-local delay=0.1
-local spinstr='|/-\'
+TOTAL_STEPS=0
+CURRENT_STEP=0
 
-```
-while ps -p "$pid" > /dev/null 2>&1; do
-    local temp=${spinstr#?}
-    printf " [%c]  " "$spinstr"
-    spinstr=$temp${spinstr%"$temp"}
-    sleep $delay
-    printf "\b\b\b\b\b\b"
-done
-printf "    \b\b\b\b"
-```
-
+init_steps() {
+    TOTAL_STEPS=$1
+    CURRENT_STEP=0
 }
+
+progress_bar() {
+    local pid=$1
+    local prefix="$2"
+    local width=20
+    local progress=0
+
+    while kill -0 "$pid" 2>/dev/null; do
+        progress=$(( (progress + 2) % 101 ))
+
+        local filled=$((progress * width / 100))
+        local empty=$((width - filled))
+
+        printf "\r%-35s [" "$prefix"
+
+        printf "${GREEN}%0.s█${RESET}" $(seq 1 $filled)
+        printf "%0.s░" $(seq 1 $empty)
+
+        printf "] %3d%%" "$progress"
+
+        sleep 0.1
+    done
+}
+
+
+
+
+run_step() {
+    local message="$1"
+    shift
+
+    CURRENT_STEP=$((CURRENT_STEP + 1))
+
+    local prefix="[${CURRENT_STEP}/${TOTAL_STEPS}] $message"
+
+    set +e
+    "$@" >/dev/null 2>&1 &
+    local pid=$!
+    set -e
+
+    progress_bar "$pid" "$prefix"
+    wait "$pid"
+    local status=$?
+
+    printf "\r%-35s [${GREEN}████████████████████${RESET}] 100%% " "$prefix"
+
+    if [[ $status -eq 0 ]]; then
+        printf "${GREEN}✔${RESET}\n"
+    else
+        printf "${RED}✖${RESET}\n"
+        exit 1
+    fi
+}
+
+
 
 # ---------- Network Check ----------
 
