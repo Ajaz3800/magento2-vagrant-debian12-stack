@@ -41,7 +41,7 @@ install_magento2() {
     else
         error "Failed to install Magento 2"
         return 1
-    fi.
+    fi
 
     # -----------Permissions------------
 
@@ -53,7 +53,7 @@ install_magento2() {
         chmod u+x bin/magento
     " || return 1
 
-    # ----------Magento setup install-----------
+    # ----------Magento setup install
 
     if ! run_step "Running Magento setup install" bash -c "
         cd \"$MAGENTO_DIR\" &&
@@ -86,7 +86,7 @@ install_magento2() {
         --session-save-redis-db=2
     "
     then
-        success "Magento setup completed successfully!"
+        success "Magento setup completed successfully"
     else
         error "Magento setup failed"
         return 1
