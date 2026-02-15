@@ -45,6 +45,8 @@ run_step "Installing MySQL" install_mysql
 
 run_step "Installing Nginx" install_nginx
 
+run_step "Installing PHP" install_php
+
 echo ""
 printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
 
@@ -54,7 +56,7 @@ printf "${GREEN}✔ Installation completed successfully!${RESET}\n"
     echo "👉 $cred_file"
     echo ""
 
-    info "Saved credentials:"
+    info "Saved MySQL credentials:"
     echo "--------------------------------"
     echo "Database Name : $MYSQL_DB_NAME"
     echo "Username      : $MYSQL_DB_USER"
