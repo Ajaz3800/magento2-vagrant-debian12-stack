@@ -28,7 +28,7 @@ setup_varnish_magento() {
     fi
 
     # Configure Magento to use Varnish
-    warn "Configuring Magento to use Varnish..."
+    warn "⚠ Configuring Magento to use Varnish..."
 
     cd "$MAGENTO_DIR" || return 1
 
@@ -47,7 +47,7 @@ setup_varnish_magento() {
 
 
     # Generate Magento VCL safely
-    warn "Generating Magento Varnish VCL..."
+    warn "⚠ Generating Magento Varnish VCL..."
 
     if sudo -u "$REAL_USER" php bin/magento varnish:vcl:generate | sudo tee "$VARNISH_VCL" >/dev/null; then
         success "✔ VCL generated at $VARNISH_VCL"
@@ -57,7 +57,7 @@ setup_varnish_magento() {
     fi
 
     # Restart Varnish
-    warn "Restarting Varnish..."
+    warn "⚠ Restarting Varnish..."
 
     if sudo systemctl restart varnish; then
         success "✔ Varnish restarted"
@@ -66,5 +66,5 @@ setup_varnish_magento() {
         return 1
     fi
 
-    success "Varnish + Magento 2 setup complete!"
+    success "✔ Varnish + Magento 2 setup complete!"
 }
