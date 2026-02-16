@@ -4,10 +4,29 @@ install_magento2() {
 
     MAGENTO_DIR="/var/www/html/magento2"
 
-    if [[ -f "$MAGENTO_DIR/app/etc/env.php" ]] && \
+    # if [[ -f "$MAGENTO_DIR/app/etc/env.php" ]] && \
+    #    php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
+    #    success "Magento 2 is already installed and working"
+    #    return
+    # fi
+
+    if [[ -d "$MAGENTO_DIR" ]]; then
+
+    # If Magento is valid → skip install
+    if [[ -f "$MAGENTO_DIR/bin/magento" ]] && \
        php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
-       success "Magento 2 is already installed and working"
-       return
+
+        success "Magento already installed and working. Skipping install."
+        return 0
+    fi
+
+    # Otherwise broken install → remove
+    warn "Found incomplete Magento directory. Cleaning..."
+
+    rm -rf "$MAGENTO_DIR" || {
+        error "Failed to remove broken Magento directory"
+        return 1
+    }
     fi
 
     warn "Magento 2 is not installed. Installing now..."
@@ -31,6 +50,27 @@ install_magento2() {
     # --- Install Magento ---
 
     run_step "Installing unzip" apt install -y unzip || return 1
+
+    # Create directory if it does not exist
+    if [[ ! -d "$MAGENTO_DIR" ]]; then
+        sudo mkdir -p "$MAGENTO_DIR" || {
+            error "Failed to create Magento directory"
+            return 1
+        }
+        success "✔ Magento directory created"
+    else
+        warn "Magento directory already exists"
+    fi
+
+    # Set ownership
+    sudo chown -R "$USER":www-data "$MAGENTO_DIR" || {
+        error "Failed to set ownership"
+        return 1
+    }
+
+    success "✔ Magento directory is ready"
+
+    }
 
     if run_step "Installing Magento 2 via Composer" bash -c "
         composer create-project \
