@@ -5,7 +5,10 @@ upstream fastcgi_backend {
 server {
     listen 80;
     server_name example.com;
-    root /var/www/html/magento2;
+
+    set $MAGE_ROOT /var/www/html/magento2;
+    set $MAGE_MODE production;
+    
     index index.php index.html;
 
     include /var/www/html/magento2/nginx.conf.sample;
