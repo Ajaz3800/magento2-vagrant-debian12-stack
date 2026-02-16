@@ -51,8 +51,8 @@ install_magento2() {
         cd \"$MAGENTO_DIR\" &&
         find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + &&
         find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + &&
-        chown -R www-data:www-data . &&
-        chmod u+x bin/magento
+        chown -R $USER:www-data . &&
+        chmod -R 775 bin/magento
     " || return 1
 
     # ----------Magento setup install
@@ -67,14 +67,14 @@ install_magento2() {
         --db-password=\"$MYSQL_DB_PASS\" \
         --admin-firstname=Admin \
         --admin-lastname=Admin \
-        --admin-email=admin@admin.com \
+        --admin-email=\"$ADMIN_EMAIL\" \
         --admin-user=\"$ADMIN_USER\" \
         --admin-password=\"$ADMIN_PASS\" \
         --language=en_US \
         --currency=USD \
         --timezone=America/Chicago \
         --backend-frontname=admin \
-        --search-engine=elasticsearch7 \
+        --search-engine=elasticsearch$VER_ES \
         --elasticsearch-host=127.0.0.1 \
         --elasticsearch-port=9200 \
         --cache-backend=redis \
