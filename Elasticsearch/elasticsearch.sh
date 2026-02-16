@@ -2,11 +2,11 @@
 
 install_elasticsearch() {
     if dpkg -l elasticsearch | grep -q "^ii"; then
-        success "Elasticsearch is already installed"
+        success "✔ Elasticsearch is already installed"
         return 0
     fi
 
-    warn "Elasticsearch is not installed. I'm going to install it now."
+    warn "⚠ Elasticsearch is not installed. I'm going to install it now."
 
     # ---------- Install & Configure Elasticsearch ----------
 if run_step "Installing OpenJDK 17" retry 3 apt-get install -y openjdk-17-jdk &&
@@ -15,7 +15,7 @@ if run_step "Installing OpenJDK 17" retry 3 apt-get install -y openjdk-17-jdk &&
    run_step "Updating APT cache" retry 3 apt-get update &&
    run_step "Installing Elasticsearch" retry 3 apt-get install -y elasticsearch
 then
-    success "Elasticsearch installed successfully"
+    success "✔ Elasticsearch installed successfully"
 
     # Enable & start service
     run_step "Configuring systemd service" bash -c "
@@ -57,7 +57,7 @@ then
     grep -q "^-Xms" "$jvm_opts" || echo "-Xms$HEAP_MIN" | sudo tee -a "$jvm_opts"
     grep -q "^-Xmx" "$jvm_opts" || echo "-Xmx$HEAP_MAX" | sudo tee -a "$jvm_opts"
 
-    success "JVM heap size configured: -Xms$HEAP_MIN -Xmx$HEAP_MAX"
+    success "✔ JVM heap size configured: -Xms$HEAP_MIN -Xmx$HEAP_MAX"
 
     # Reload & restart Elasticsearch
     run_step "Reloading systemd & restarting Elasticsearch" bash -c "
@@ -67,9 +67,9 @@ then
 
     # Verify Elasticsearch is running
     if curl -s -X GET "http://localhost:$HTTP_PORT" >/dev/null; then
-        success "Elasticsearch is running on port $HTTP_PORT"
+        success "✔ Elasticsearch is running on port $HTTP_PORT"
     else
-        error "Elasticsearch failed to start"
+        error "✖ Elasticsearch failed to start"
         exit 1
     fi
 
