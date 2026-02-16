@@ -2,7 +2,7 @@ generate_self_signed_ssl() {
 
     local SSL_DIR="/etc/nginx/ssl"
 
-    warn "Generating self-signed SSL certificate for $PMA_URL..."
+    warn "⚠ Generating self-signed SSL certificate for $PMA_URL..."
 
     local CERT="$SSL_DIR/$PMA_URL.crt"
     local KEY="$SSL_DIR/$PMA_URL.key"
@@ -20,14 +20,14 @@ generate_self_signed_ssl() {
     " || return 1
 
     if [[ $? -ne 0 ]]; then
-        error "Failed to generate SSL certificate"
+        error "✖ Failed to generate SSL certificate"
         return 1
     fi
 
-    success "SSL certificate generated: $CERT"
+    success "✔ SSL certificate generated: $CERT"
 
-    # 🔥 Update nginx config file
-    warn "Updating nginx config..."
+    # Update nginx config file
+    warn "⚠ Updating nginx config..."
 
     cat > "$PMA_CONF" <<EOF
 server {
@@ -50,12 +50,12 @@ EOF
     # Enable site
     if [[ ! -L "$PMA_ENABLED" ]]; then
         ln -s "$PMA_CONF" "$PMA_ENABLED"
-        success "phpMyAdmin site enabled"
+        success "✔ phpMyAdmin site enabled"
     fi
 
     # ---------- Repeat for Magento 2 ----------
 
-    warn "Generating self-signed SSL certificate for $BASE_URL..."
+    warn "⚠ Generating self-signed SSL certificate for $BASE_URL..."
 
     local CERT="$SSL_DIR/$BASE_URL.crt"
     local KEY="$SSL_DIR/$BASE_URL.key"
@@ -73,14 +73,14 @@ EOF
     " || return 1
 
     if [[ $? -ne 0 ]]; then
-        error "Failed to generate SSL certificate"
+        error "✖ Failed to generate SSL certificate"
         return 1
     fi
 
-    success "SSL certificate generated: $CERT"
+    success "✔ SSL certificate generated: $CERT"
 
     # Update nginx config file
-    warn "Updating nginx config..."
+    warn "⚠ Updating nginx config..."
 
     cat >> "$MAGENTO_CONF" <<EOF
 server {
@@ -106,15 +106,15 @@ EOF
     # Enable site
     if [[ ! -L "$MAGENTO_ENABLED" ]]; then
         ln -s "$MAGENTO_CONF" "$MAGENTO_ENABLED"
-        success "Magento 2 site enabled"
+        success "✔ Magento 2 site enabled"
     fi
 
     # Reload nginx
-    warn "Reloading nginx..."
+    warn "⚠ Reloading nginx..."
     nginx -t && systemctl reload nginx
 
-    # ✅ Update Magento base URLs to HTTPS
-    warn "Updating Magento base URLs to HTTPS..."
+    # Update Magento base URLs to HTTPS
+    warn "⚠ Updating Magento base URLs to HTTPS..."
     cd "$MAGENTO_DIR" || exit 1
 
     sudo -u "$REAL_USER" php bin/magento config:set web/unsecure/base_url https://$BASE_URL/
@@ -123,7 +123,7 @@ EOF
     sudo -u "$REAL_USER" php bin/magento config:set web/secure/use_in_adminhtml 1
     sudo -u "$REAL_USER" php bin/magento cache:flush
 
-    success "Magento base URLs updated and cache flushed"
+    success "✔ Magento base URLs updated and cache flushed"
 
-    success "SSL setup completed successfully!"
+    success "✔ SSL setup completed successfully!"
 }
