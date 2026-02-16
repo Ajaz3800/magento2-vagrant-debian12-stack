@@ -50,15 +50,15 @@ success "System updated successfully"
 
 setup_credentials
 
-#install_mysql
+install_mysql
 
-#install_php
+install_php
 
-#install_phpmyadmin
+install_phpmyadmin
 
-#install_elasticsearch
+install_elasticsearch
 
-#install_redis
+install_redis
 
 install_composer
 
@@ -66,7 +66,7 @@ install_magento2
 
 update_hosts_file
 
-#install_nginx
+install_nginx
 
 generate_self_signed_ssl
 
