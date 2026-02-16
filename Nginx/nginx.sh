@@ -85,7 +85,7 @@ install_nginx() {
     fi
 
     run_step "Copying Magento Nginx config" \
-        cp "$magento_sample" "$magento_dest" || return 1
+        cp "$magento_sample_front" "$magento_dest_front" || return 1
     
 
     # Update PHP-FPM socket
