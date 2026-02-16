@@ -2,7 +2,7 @@
 
 install_magento2() {
 
-    local MAGENTO_DIR="/var/www/html/magento2"
+    MAGENTO_DIR="/var/www/html/magento2"
 
     if [[ -f "$MAGENTO_DIR/app/etc/env.php" ]] && \
        php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
