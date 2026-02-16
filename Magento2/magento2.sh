@@ -13,7 +13,7 @@ install_magento2() {
     if [[ -d "$MAGENTO_DIR" ]]; then
 
     # If Magento is valid → skip install
-    if [[ -f "$MAGENTO_DIR/bin/magento" ]] && \
+    if [[ -f "$MAGENTO_DIR/app/etc/env.php" ]] && \
        php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
 
         success "✔ Magento already installed and working. Skipping install."
