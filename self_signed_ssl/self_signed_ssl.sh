@@ -59,8 +59,8 @@ EOF
 
     local CERT="$SSL_DIR/$BASE_URL.crt"
     local KEY="$SSL_DIR/$BASE_URL.key"
-    local MAGENTO_CONF="/etc/nginx/sites-available/magento2.conf"
-    local MAGENTO_ENABLED="/etc/nginx/sites-enabled/magento2.conf"
+    local MAGENTO_CONF="/etc/nginx/sites-available/magento2-front.conf"
+    local MAGENTO_ENABLED="/etc/nginx/sites-enabled/magento2-front.conf"
 
     mkdir -p "$SSL_DIR"
 
@@ -79,22 +79,10 @@ EOF
 
     success "SSL certificate generated: $CERT"
 
-    # 🔥 Update nginx config file
+    # Update nginx config file
     warn "Updating nginx config..."
 
-    cat > "$MAGENTO_CONF" <<EOF
-upstream fastcgi_backend {
-    server unix:/run/php/php$PHP_VER-fpm.sock;
-}
-
-# HTTP → HTTPS redirect ONLY
-server {
-    listen 80;
-    server_name $BASE_URL;
-    return 301 https://$host$request_uri;
-}
-
-# HTTPS Magento
+    cat >> "$MAGENTO_CONF" <<EOF
 server {
     listen 443 ssl http2;
     server_name $BASE_URL;
@@ -102,13 +90,16 @@ server {
     ssl_certificate $CERT;
     ssl_certificate_key $KEY;
 
-    set $MAGE_ROOT /var/www/html/magento2;
-    set $MAGE_MODE production;
+    proxy_buffer_size 128k;
+    proxy_buffers 4 256k;
+    proxy_busy_buffers_size 256k;
 
-    include /var/www/html/magento2/nginx.conf.sample;
-
-    # Optional security headers
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    location / {
+          proxy_pass http://127.0.0.1:6081;  # Varnish
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto https;
+    }
 }
 EOF
 
