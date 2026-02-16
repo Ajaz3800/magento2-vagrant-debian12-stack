@@ -98,34 +98,36 @@ install_magento2() {
 
     # ----------Magento setup install
 # run_step "Running Magento setup install" bash -c "    "
-    if ! cd \"$MAGENTO_DIR\" &&
-        sudo -u "$REAL_USER" php bin/magento setup:install \
-        --base-url=\"http://$BASE_URL\" \
-        --db-host=localhost \
-        --db-name=\"$MYSQL_DB_NAME\" \
-        --db-user=\"$MYSQL_DB_USER\" \
-        --db-password=\"$MYSQL_DB_PASS\" \
-        --admin-firstname=Admin \
-        --admin-lastname=Admin \
-        --admin-email=\"$ADMIN_EMAIL\" \
-        --admin-user=\"$ADMIN_USER\" \
-        --admin-password=\"$ADMIN_PASS\" \
-        --language=en_US \
-        --currency=USD \
-        --timezone=America/Chicago \
-        --backend-frontname=admin \
-        --search-engine=elasticsearch$VER_ES \
-        --elasticsearch-host=127.0.0.1 \
-        --elasticsearch-port=9200 \
-        --cache-backend=redis \
-        --cache-backend-redis-server=127.0.0.1 \
-        --cache-backend-redis-db=0 \
-        --page-cache=redis \
-        --page-cache-redis-server=127.0.0.1 \
-        --page-cache-redis-db=1 \
-        --session-save=redis \
-        --session-save-redis-host=127.0.0.1 \
+    if ! sudo -u "$REAL_USER" bash -c "
+        cd "$MAGENTO_DIR" || exit 1
+        php bin/magento setup:install
+        --base-url=http://$BASE_URL
+        --db-host=localhost 
+        --db-name=$MYSQL_DB_NAME
+        --db-user=$MYSQL_DB_USER
+        --db-password=$MYSQL_DB_PASS
+        --admin-firstname=Admin 
+        --admin-lastname=Admin 
+        --admin-email=$ADMIN_EMAIL
+        --admin-user=$ADMIN_USER
+        --admin-password=$ADMIN_PASS
+        --language=en_US 
+        --currency=USD 
+        --timezone=America/Chicago 
+        --backend-frontname=admin 
+        --search-engine=elasticsearch$VER_ES 
+        --elasticsearch-host=127.0.0.1 
+        --elasticsearch-port=9200 
+        --cache-backend=redis 
+        --cache-backend-redis-server=127.0.0.1 
+        --cache-backend-redis-db=0 
+        --page-cache=redis 
+        --page-cache-redis-server=127.0.0.1 
+        --page-cache-redis-db=1 
+        --session-save=redis 
+        --session-save-redis-host=127.0.0.1 
         --session-save-redis-db=2
+    "
 
     then
         success "✔ Magento setup completed successfully"
