@@ -75,19 +75,28 @@ fi
     warn "Configuring MySQL for Magento triggers..."
 
     local mysql_conf="/etc/mysql/mysql.conf.d/mysqld.cnf"
+    local config_changed=false
 
     # Add setting only if not already present
     if ! grep -q "log_bin_trust_function_creators" "$mysql_conf"; then
         echo "" >> "$mysql_conf"
         echo "[mysqld]" >> "$mysql_conf"
         echo "log_bin_trust_function_creators=1" >> "$mysql_conf"
-        success "MySQL config updated"
+            config_changed=true
+            success "MySQL config updated"
     else
         success "MySQL config already contains required setting"
     fi
 
-    # Restart MySQL
-    run_step "Restarting MySQL service" systemctl restart mysql || return 1
 
-    success "MySQL configured for Magento successfully"
+    # Restart only if config changed
+
+    if [ "$config_changed" = true ]; then
+        run_step "Restarting MySQL service" systemctl restart mysql || return 1
+    else
+        warn "Skipping MySQL restart (no changes detected)"
+    fi
+
+    success "MySQL configured for Magento successfully."
+
 }
