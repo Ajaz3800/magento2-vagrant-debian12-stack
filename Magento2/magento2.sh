@@ -60,7 +60,7 @@ install_magento2() {
     if ! run_step "Running Magento setup install" bash -c "
         cd \"$MAGENTO_DIR\" &&
         php bin/magento setup:install \
-        --base-url=\"$BASE_URL\" \
+        --base-url=\"http://$BASE_URL\" \
         --db-host=localhost \
         --db-name=\"$MYSQL_DB_NAME\" \
         --db-user=\"$MYSQL_DB_USER\" \
