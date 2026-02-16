@@ -4,6 +4,10 @@ setup_credentials() {
     cred_file="$(pwd)/Credentials/credentials.txt"
 
     warn "Configuring Elasticsearch settings..."
+
+    read -rp "Enter Elasticsearch version to install (e.g., 7, 8) [default: 8]: " VER_ES
+    VER_ES=${VER_ES:-8}
+    
     read -rp "Enter node.name [default: My First Node]: " NODE_NAME
     NODE_NAME=${NODE_NAME:-"My First Node"}
 
@@ -30,9 +34,10 @@ setup_credentials() {
     echo ""
 
     warn "Magento2 version selection..."
-    read -rp "Enter magento version (e.g., 2.4.6, 2.4.7) [default: 2.4.7]: " MAG_VER
-    MAG_VER=${MAG_VER:-2.4.7}
+    read -rp "Enter magento version (e.g., 2.4.6, 2.4.7, 2.4.8) [default: 2.4.8]: " MAG_VER
+    MAG_VER=${MAG_VER:-2.4.8}
     echo ""
+
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
@@ -49,13 +54,15 @@ setup_credentials() {
     read -rp "Enter username: " MYSQL_DB_USER
     read -rsp "Enter user password: " MYSQL_DB_PASS
     echo ""
-
     echo ""
     warn "Magento setup configuration"
 
     read -rp "Base URL [http://test.com]: " BASE_URL
     BASE_URL=${BASE_URL:-http://test.com}
 
+    read -rp "Admin email [admin@example.com]: " ADMIN_EMAIL
+    ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
+    
     read -rp "Admin username [admin]: " ADMIN_USER
     ADMIN_USER=${ADMIN_USER:-admin}
 
