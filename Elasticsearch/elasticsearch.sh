@@ -11,7 +11,7 @@ install_elasticsearch() {
     # ---------- Install & Configure Elasticsearch ----------
 if run_step "Installing OpenJDK 17" retry 3 apt-get install -y openjdk-17-jdk &&
    wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg &&
-   echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/9.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-9.x.list &&
+   echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/$VER_ES.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-$VER_ES.x.list &&
    run_step "Updating APT cache" retry 3 apt-get update &&
    run_step "Installing Elasticsearch" retry 3 apt-get install -y elasticsearch
 then
@@ -21,7 +21,6 @@ then
     run_step "Configuring systemd service" bash -c "
         sudo systemctl daemon-reload &&
         sudo systemctl enable elasticsearch.service &&
-        sudo systemctl start elasticsearch.service
     "
 
     # Interactive configuration
