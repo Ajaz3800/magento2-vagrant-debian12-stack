@@ -9,11 +9,11 @@ install_phpmyadmin() {
 
     # Detect existing install
     if [[ -d "$BASE_DIR/phpmyadmin" ]]; then
-        success "phpMyAdmin is already installed"
+        success "✔ phpMyAdmin is already installed"
         return 0
     fi
 
-    warn "phpMyAdmin is not installed. Installing now..."
+    warn "⚠ phpMyAdmin is not installed. Installing now..."
 
     # Download
     run_step "Downloading phpMyAdmin" \
@@ -31,7 +31,7 @@ install_phpmyadmin() {
     EXTRACTED_DIR=$(find "$BASE_DIR" -maxdepth 1 -type d -name "phpMyAdmin-*" | head -n 1)
 
     if [[ -z "$EXTRACTED_DIR" ]]; then
-        error "Extraction failed: phpMyAdmin folder not found"
+        error "✖ Extraction failed: phpMyAdmin folder not found"
         return 1
     fi
 
@@ -59,5 +59,5 @@ install_phpmyadmin() {
         chmod -R 755 \"$BASE_DIR\"
     " || return 1
 
-    success "phpMyAdmin installed successfully"
+    success "✔ phpMyAdmin installed successfully"
 }
