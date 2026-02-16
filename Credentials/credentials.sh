@@ -81,7 +81,7 @@ setup_credentials() {
     warn "⚠ Magento setup configuration"
 
     read -rp "Magento Admin email [default: admin@example.com]: " ADMIN_EMAIL
-    ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
+    ADMIN_EMAIL=${ADMIN_EMAIL:-admin@email.com}
 
     read -rp "Magento Admin username [default: admin]: " ADMIN_USER
     ADMIN_USER=${ADMIN_USER:-admin}
