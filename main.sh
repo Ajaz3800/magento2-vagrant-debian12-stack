@@ -134,10 +134,31 @@ else
     error "✖ Nginx service is not running!"
 fi
 
-    echo ""
-    echo "👉 Admin panel:"
-    echo "$BASE_URL/admin"
-    echo ""
+
+if systemctl is-active --quiet nginx; then
+
+    # Test phpMyAdmin endpoint
+    if curl -s -o /dev/null -w "%{http_code}" $BASE_URL | grep -q "200"; then
+
+        success "✔ Magento is running!"
+        echo "🌐 Access Magento in your browser:"
+        echo ""
+        echo "   $BASE_URL"
+        echo ""
+        echo "👉 Admin panel:"
+        echo "   $BASE_URL/admin"
+        echo ""
+        echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP or Domain."
+        echo ""
+
+    else
+        error "✖ Magento endpoint is not responding!"
+        warn "⚠ Check nginx config or PHP-FPM status."
+    fi
+
+else
+    error "✖ Nginx service is not running!"
+fi
 
 
 info "Script completed successfully"
