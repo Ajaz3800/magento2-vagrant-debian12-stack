@@ -41,9 +41,11 @@ setup_credentials() {
     PMA_URL=${PMA_URL:-"example.com"}
     echo ""
 
-    warn "Magento2 version selection..."
+    warn "Magento2 configuration..."
     read -rp "Enter magento version (e.g., 2.4.6, 2.4.7, 2.4.8) [default: 2.4.8]: " MAG_VER
     MAG_VER=${MAG_VER:-2.4.8}
+    read -rp "Base URL [default: example.com]: " BASE_URL
+    BASE_URL=${BASE_URL:-example.com}
     echo ""
 
 
@@ -69,9 +71,6 @@ setup_credentials() {
 
     warn "Magento setup configuration"
 
-    read -rp "Base URL [default: example.com]: " BASE_URL
-    BASE_URL=${BASE_URL:-example.com}
-
     read -rp "Admin email [default: admin@example.com]: " ADMIN_EMAIL
     ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
 
@@ -88,7 +87,6 @@ export MYSQL_ROOT_PASS="$MYSQL_ROOT_PASS"
 export MYSQL_DB_NAME="$MYSQL_DB_NAME"
 export MYSQL_DB_USER="$MYSQL_DB_USER"
 export MYSQL_DB_PASS="$MYSQL_DB_PASS"
-export BASE_URL="$BASE_URL"
 export ADMIN_USER="$ADMIN_USER"
 export ADMIN_PASS="$ADMIN_PASS"
 EOF
