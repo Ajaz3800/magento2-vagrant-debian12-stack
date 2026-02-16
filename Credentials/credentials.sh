@@ -3,7 +3,7 @@
 setup_credentials() {
     cred_file="$(pwd)/Credentials/credentials.txt"
 
-    warn "Configuring Elasticsearch settings..."
+    warn "⚠ Configuring Elasticsearch settings..."
 
     read -rp "Enter Elasticsearch version to install (e.g., 7, 8) [default: 8]: " VER_ES
     VER_ES=${VER_ES:-8}
@@ -27,21 +27,21 @@ setup_credentials() {
     read -rp "Enter maximum JVM heap size (e.g., 2g) [default: 256m]: " HEAP_MAX
     HEAP_MAX=${HEAP_MAX:-256m}
 
-    warn "Configuring PHP settings..."
+    warn "⚠ Configuring PHP settings..."
     
-    # 1️⃣ Ask user for PHP version
+    #  Ask user for PHP version
     read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3) [default: 8.3]: " PHP_VER
     PHP_VER=${PHP_VER:-8.3}
     echo ""
 
-    warn "Domain for phpmyadmin..."
+    warn "⚠ Domain for phpmyadmin..."
     
-    # 1️⃣ Ask user for phpmyadmin Domain
+    #  Ask user for phpmyadmin Domain
     read -rp "Enter phpMyAdmin Domain (e.g., example.com) [default: example.com]: " PMA_URL
     PMA_URL=${PMA_URL:-"example.com"}
     echo ""
 
-    warn "Magento2 configuration..."
+    warn "⚠ Magento2 configuration..."
     read -rp "Enter magento version (e.g., 2.4.6, 2.4.7, 2.4.8) [default: 2.4.8]: " MAG_VER
     MAG_VER=${MAG_VER:-2.4.8}
     read -rp "Enter Magento Domain [default: example.com]: " BASE_URL
@@ -51,7 +51,7 @@ setup_credentials() {
      # --- Ask Magento credentials ---
 
     echo ""
-    warn "Magento Marketplace authentication required"
+    warn "⚠ Magento Marketplace authentication required"
 
     read -rp "Enter Magento Public Key: " MAGENTO_PUBLIC
     read -rsp "Enter Magento Private Key: " MAGENTO_PRIVATE
@@ -60,12 +60,12 @@ setup_credentials() {
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
-        warn "Loading existing credentials..."
+        warn "⚠ Loading existing credentials..."
         source "$cred_file"
         return 0
     fi
 
-    warn "Creating credentials file..."
+    warn "⚠ Creating credentials file..."
 
     read -rsp "Enter MySQL ROOT password [default: root@123]: " MYSQL_ROOT_PASS
     MYSQL_ROOT_PASS=${MYSQL_ROOT_PASS:-"root@123"}
@@ -78,7 +78,7 @@ setup_credentials() {
     MYSQL_DB_PASS=${MYSQL_DB_PASS:-"test@123"}
     echo ""
 
-    warn "Magento setup configuration"
+    warn "⚠ Magento setup configuration"
 
     read -rp "Magento Admin email [default: admin@example.com]: " ADMIN_EMAIL
     ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
@@ -100,5 +100,5 @@ export ADMIN_USER="$ADMIN_USER"
 export ADMIN_PASS="$ADMIN_PASS"
 EOF
 
-    success "Credentials saved to $cred_file"
+    success "✔ Credentials saved to $cred_file"
 }
