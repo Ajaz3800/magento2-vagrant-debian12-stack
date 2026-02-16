@@ -16,20 +16,20 @@ install_magento2() {
     if [[ -f "$MAGENTO_DIR/bin/magento" ]] && \
        php "$MAGENTO_DIR/bin/magento" --version >/dev/null 2>&1; then
 
-        success "Magento already installed and working. Skipping install."
+        success "✔ Magento already installed and working. Skipping install."
         return 0
     fi
 
     # Otherwise broken install → remove
-    warn "Found incomplete Magento directory. Cleaning..."
+    warn "⚠ Found incomplete Magento directory. Cleaning..."
 
     rm -rf "$MAGENTO_DIR" || {
-        error "Failed to remove broken Magento directory"
+        error "✖ Failed to remove broken Magento directory"
         return 1
     }
     fi
 
-    warn "Magento 2 is not installed. Installing now..."
+    warn "⚠ Magento 2 is not installed. Installing now..."
 
     # --- Configure composer auth ---
 
@@ -45,12 +45,12 @@ install_magento2() {
     # Create directory if it does not exist
     if [[ ! -d "$MAGENTO_DIR" ]]; then
         sudo mkdir -p "$MAGENTO_DIR" || {
-            error "Failed to create Magento directory"
+            error "✖ Failed to create Magento directory"
             return 1
         }
-        success "Magento directory created"
+        success "✔ Magento directory created"
     else
-        warn "Magento directory already exists"
+        warn "⚠ Magento directory already exists"
     fi
 
     # Detect real user (works with or without sudo)
@@ -58,18 +58,18 @@ install_magento2() {
     # Set ownership correctly
 
     sudo chown -R "$REAL_USER":www-data "$MAGENTO_DIR" || {
-    error "Failed to set ownership"
+    error "✖ Failed to set ownership"
     return 1
     }
 
 
     # Set permissions
     sudo chmod -R 775 "$MAGENTO_DIR" || {
-        error "Failed to set permissions"
+        error "✖ Failed to set permissions"
         return 1
     }
 
-    success "Magento directory is ready ✔"
+    success "✔ Magento directory is ready"
 
 
 
@@ -80,9 +80,9 @@ install_magento2() {
         \"$MAGENTO_DIR\"
     "
     then
-        success "Magento 2 installed successfully at $MAGENTO_DIR"
+        success "✔ Magento 2 installed successfully at $MAGENTO_DIR"
     else
-        error "Failed to install Magento 2"
+        error "✖ Failed to install Magento 2"
         return 1
     fi
 
@@ -129,9 +129,9 @@ install_magento2() {
         --session-save-redis-db=2
     "
     then
-        success "Magento setup completed successfully"
+        success "✔ Magento setup completed successfully"
     else
-        error "Magento setup failed"
+        error "✖ Magento setup failed"
         return 1
     fi
 
@@ -146,12 +146,12 @@ install_magento2() {
         php bin/magento module:disable Magento_TwoFactorAuth Magento_AdminAdobeImsTwoFactorAuth
     "
     then
-        success "Magento post-install tasks completed"
+        success "✔ Magento post-install tasks completed"
     else
-        error "Magento post-install tasks failed"
+        error "✖ Magento post-install tasks failed"
         return 1
     fi
 
 
-    success "Magento 2 installed successfully!"
+    success "✔ Magento 2 installed successfully!"
 }
