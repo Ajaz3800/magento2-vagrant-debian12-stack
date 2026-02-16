@@ -51,4 +51,24 @@ MYSQL_SCRIPT
         error "Failed to configure MySQL database"
         return 1
     fi
+
+        # 5️⃣ Enable log_bin_trust_function_creators for Magento
+    warn "Configuring MySQL for Magento triggers..."
+
+    local mysql_conf="/etc/mysql/mysql.conf.d/mysqld.cnf"
+
+    # Add setting only if not already present
+    if ! grep -q "log_bin_trust_function_creators" "$mysql_conf"; then
+        echo "" >> "$mysql_conf"
+        echo "[mysqld]" >> "$mysql_conf"
+        echo "log_bin_trust_function_creators=1" >> "$mysql_conf"
+        success "MySQL config updated"
+    else
+        success "MySQL config already contains required setting"
+    fi
+
+    # Restart MySQL
+    run_step "Restarting MySQL service" systemctl restart mysql || return 1
+
+    success "MySQL configured for Magento successfully"
 }
