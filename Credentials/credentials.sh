@@ -30,7 +30,15 @@ setup_credentials() {
     warn "Configuring PHP settings..."
     
     # 1️⃣ Ask user for PHP version
-    read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3): " PHP_VER
+    read -rp "Enter PHP version to install (e.g., 8.1, 8.2, 8.3) [default: 8.3]: " PHP_VER
+    PHP_VER=${PHP_VER:-8.3}
+    echo ""
+
+    warn "Domain for phpmyadmin..."
+    
+    # 1️⃣ Ask user for phpmyadmin Domain
+    read -rp "Enter phpMyAdmin Domain (e.g., example.com) [default: example.com]: " PMA_URL
+    PMA_URL=${PMA_URL:-"example.com"}
     echo ""
 
     warn "Magento2 version selection..."
@@ -48,25 +56,29 @@ setup_credentials() {
 
     warn "Creating credentials file..."
 
-    read -rsp "Enter MySQL ROOT password: " MYSQL_ROOT_PASS
+    read -rsp "Enter MySQL ROOT password [default: root@123]: " MYSQL_ROOT_PASS
+    MYSQL_ROOT_PASS=${MYSQL_ROOT_PASS:-"root@123"}
     echo ""
-    read -rp "Enter database name: " MYSQL_DB_NAME
-    read -rp "Enter username: " MYSQL_DB_USER
-    read -rsp "Enter user password: " MYSQL_DB_PASS
+    read -rp "Enter database name [default: test]: " MYSQL_DB_NAME
+    MYSQL_DB_NAME=${MYSQL_DB_NAME:-"test"}
+    read -rp "Enter username [default: test]: " MYSQL_DB_USER
+    MYSQL_DB_USER=${MYSQL_DB_USER:-"test"}
+    read -rsp "Enter user password [default: test@123]: " MYSQL_DB_PASS
+    MYSQL_DB_PASS=${MYSQL_DB_PASS:-"test@123"}
     echo ""
-    echo ""
+
     warn "Magento setup configuration"
 
-    read -rp "Base URL [http://test.com]: " BASE_URL
-    BASE_URL=${BASE_URL:-http://test.com}
+    read -rp "Base URL [default: example.com]: " BASE_URL
+    BASE_URL=${BASE_URL:-example.com}
 
-    read -rp "Admin email [admin@example.com]: " ADMIN_EMAIL
+    read -rp "Admin email [default: admin@example.com]: " ADMIN_EMAIL
     ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
-    
-    read -rp "Admin username [admin]: " ADMIN_USER
+
+    read -rp "Admin username [default: admin]: " ADMIN_USER
     ADMIN_USER=${ADMIN_USER:-admin}
 
-    read -rsp "Admin password [admin@123]: " ADMIN_PASS
+    read -rsp "Admin password [default: admin@123]: " ADMIN_PASS
     ADMIN_PASS=${ADMIN_PASS:-admin@123}
     echo ""
 
