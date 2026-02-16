@@ -48,7 +48,7 @@ setup_credentials
 
 run_step "Updating system packages" retry 3 apt-get update
 
-success "System updated successfully"
+success "✔ System updated successfully"
 
 install_mysql
 
