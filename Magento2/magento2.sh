@@ -57,7 +57,7 @@ install_magento2() {
             error "Failed to create Magento directory"
             return 1
         }
-        success "✔ Magento directory created"
+        success "Magento directory created"
     else
         warn "Magento directory already exists"
     fi
@@ -68,9 +68,15 @@ install_magento2() {
         return 1
     }
 
-    success "✔ Magento directory is ready"
-
+    # Set permissions
+    sudo chmod -R 775 "$MAGENTO_DIR" || {
+        error "Failed to set permissions"
+        return 1
     }
+
+    success "Magento directory is ready ✔"
+
+
 
     if run_step "Installing Magento 2 via Composer" bash -c "
         composer create-project \
