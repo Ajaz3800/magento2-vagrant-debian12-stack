@@ -1,0 +1,12 @@
+upstream fastcgi_backend {
+    server unix:/run/php/php8.3-fpm.sock;
+}
+
+server {
+    listen 80;
+    server_name example.com;
+    root /var/www/html/magento2;
+    index index.php index.html;
+
+    include /var/www/html/magento2/nginx.conf.sample;
+}
