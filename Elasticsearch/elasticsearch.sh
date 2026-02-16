@@ -1,7 +1,7 @@
 #!/bin/bash
 
 install_elasticsearch() {
-    if dpkg -l elasticsearch | grep -q "^ii"; then
+    if dpkg -l elasticsearch | grep -q "^ii" && systemctl is-active --quiet elasticsearch; then
         success "✔ Elasticsearch is already installed"
         return 0
     fi
@@ -63,6 +63,7 @@ then
     run_step "Reloading systemd & restarting Elasticsearch" bash -c "
         sudo systemctl daemon-reload &&
         sudo systemctl restart elasticsearch.service
+        sudo systemctl start elasticsearch.service
     "
 
     # Verify Elasticsearch is running
