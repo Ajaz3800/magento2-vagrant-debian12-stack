@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VARNISH_VCL="/etc/varnish/magento.vcl"
-MAGENTO_DEFAULT_CONF="/etc/nginx/sites-enabled/magento2.conf"
+MAGENTO_DEFAULT_CONF="/etc/nginx/sites-enabled/magento2-back.conf"
 
 setup_varnish_magento() {
 
@@ -27,33 +27,44 @@ setup_varnish_magento() {
         fi
     fi
 
+    # Configure Magento to use Varnish
+    warn "Configuring Magento to use Varnish..."
 
-    # Generate Magento VCL safely
-    warn "Generating Magento Varnish VCL..."
-    if php "$MAGENTO_DIR/bin/magento" varnish:vcl:generate | sudo tee "$VARNISH_VCL" >/dev/null; then
-        success "✔ Magento VCL generated at $VARNISH_VCL"
+    cd "$MAGENTO_DIR" || return 1
+
+    if php bin/magento config:set system/full_page_cache/caching_application 2; then
+        success "✔ Magento set to use Varnish"
     else
-        error "✖ Failed to generate Magento VCL. Check permissions."
+        error "✖ Failed to configure Magento cache"
         return 1
     fi
 
-    # Configure Varnish to listen on port 80
-    warn "Configuring Varnish to listen on port 80..."
-    sed -i 's/^VARNISH_LISTEN_PORT=.*/VARNISH_LISTEN_PORT=80/' /etc/default/varnish 2>/dev/null || true
-    sed -i 's/^VARNISH_STORAGE_SIZE=.*/VARNISH_STORAGE_SIZE=1G/' /etc/default/varnish 2>/dev/null || true
-
-    # Configure Nginx to listen on port 8080
-    if [ -f "$MAGENTO_DEFAULT_CONF" ]; then
-        warn "Configuring Nginx to listen on 8080..."
-        sed -i 's/listen 80;/listen 8080;/' "$MAGENTO_DEFAULT_CONF"
+    if php bin/magento cache:flush; then
+        success "✔ Magento cache flushed"
     else
-        warn "⚠ Nginx Magento config not found at $MAGENTO_DEFAULT_CONF. Skipping port change."
+        warn "⚠ Cache flush failed (continuing...)"
     fi
 
-    # Reload and restart services
-    warn "Restarting Nginx and Varnish..."
-    nginx -t && systemctl restart nginx
-    systemctl restart varnish
+
+    # Generate Magento VCL safely
+    warn "Generating Magento Varnish VCL..."
+
+    if php bin/magento varnish:vcl:generate | sudo tee "$VARNISH_VCL" >/dev/null; then
+        success "✔ VCL generated at $VARNISH_VCL"
+    else
+        error "✖ Failed to generate VCL"
+        return 1
+    fi
+
+    # Restart Varnish
+    warn "Restarting Varnish..."
+
+    if sudo systemctl restart varnish; then
+        success "✔ Varnish restarted"
+    else
+        error "✖ Failed to restart Varnish"
+        return 1
+    fi
 
     success "Varnish + Magento 2 setup complete!"
 }
