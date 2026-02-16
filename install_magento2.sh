@@ -17,6 +17,7 @@ source ./Redis/redis.sh
 source ./phpmyadmin/phpmyadmin.sh
 source ./Composer/composer.sh
 source ./Magento2/magento2.sh
+source ./Varnish/varnish.sh
 
 # System config file
 source ./etc-hosts/hosts.sh
@@ -68,6 +69,9 @@ update_hosts_file
 #install_nginx
 
 generate_self_signed_ssl
+
+setup_varnish_magento
+
 
 # 8️⃣ Test Elasticsearch
     echo ""
@@ -151,7 +155,7 @@ if systemctl is-active --quiet nginx; then
 
     if [ "$HTTP_STATUS" -eq 200 ]; then
 
-        success "✔ Magento is running!"
+        success "✔ Varnish is running and caching Magento pages!"
         echo "👉 Access Magento in your browser:"
         echo ""
         echo "   http://$BASE_URL"
@@ -161,9 +165,8 @@ if systemctl is-active --quiet nginx; then
         echo ""
 
     else
-        error "✖ Magento endpoint is not responding!"
-        warn "⚠ Check nginx config or PHP-FPM status."
-        echo "   Last HTTP status code: $HTTP_STATUS"
+        error "Varnish is not responding properly! HTTP status: $HTTP_STATUS"
+        warn "⚠ Check Nginx, Varnish, and PHP-FPM status."
     fi
 
 else
