@@ -4,11 +4,11 @@ install_php() {
 
     # Check if PHP of that version is already installed
     if command -v php >/dev/null 2>&1 && php -v | grep -q "PHP $PHP_VER"; then
-        success "PHP $PHP_VER is already installed"
+        success "✔ PHP $PHP_VER is already installed"
         return 0
     fi
 
-    warn "Installing PHP $PHP_VER..."
+    warn "⚠ Installing PHP $PHP_VER..."
 
     # Update repo
     run_step "Adding PHP repository" retry 3 apt-get install -y lsb-release apt-transport-https ca-certificates wget gnupg || return 1
@@ -22,9 +22,9 @@ install_php() {
 
     if run_step "Installing PHP $PHP_VER and extensions" retry 3 apt-get install -y "${extensions[@]}"; then
         phpenmod mbstring
-        success "PHP $PHP_VER and extensions installed successfully"
+        success "✔ PHP $PHP_VER and extensions installed successfully"
     else
-        error "Failed to install PHP $PHP_VER"
+        error "✖ Failed to install PHP $PHP_VER"
         return 1
     fi
 }
