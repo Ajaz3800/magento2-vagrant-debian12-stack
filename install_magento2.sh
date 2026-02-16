@@ -119,8 +119,10 @@ SERVER_IP=$(hostname -I | awk '{print $1}')
 # Check nginx service first
 if systemctl is-active --quiet nginx; then
 
-    # Test phpMyAdmin endpoint
-    if curl -s -o /dev/null -w "%{http_code}" $PMA_URL | grep -q "200"; then
+    # Test phpMyAdmin endpoint (follow redirects, ignore SSL for self-signed)
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L -k "https://$PMA_URL")
+
+    if [ "$HTTP_STATUS" -eq 200 ]; then
 
         success "✔ phpMyAdmin is running!"
         echo "👉 Access phpMyAdmin in your browser:"
@@ -134,6 +136,7 @@ if systemctl is-active --quiet nginx; then
     else
         error "✖ phpMyAdmin endpoint is not responding!"
         warn "⚠ Check nginx config or PHP-FPM status."
+        echo "   Last HTTP status code: $HTTP_STATUS"
     fi
 
 else
@@ -143,18 +146,16 @@ fi
 
 if systemctl is-active --quiet nginx; then
 
-    # Test phpMyAdmin endpoint
-    if curl -s -o /dev/null -w "%{http_code}" $BASE_URL | grep -q "200"; then
+    # Test Magento endpoint (follow redirects, ignore SSL for self-signed)
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L -k "https://$BASE_URL")
+
+    if [ "$HTTP_STATUS" -eq 200 ]; then
 
         success "✔ Magento is running!"
-        echo "🌐 Access Magento in your browser:"
+        echo "👉 Access Magento in your browser:"
         echo ""
         echo "   http://$BASE_URL"
         echo "   https://$BASE_URL"
-        echo ""
-        echo "👉 Admin panel:"
-        echo "   http://$BASE_URL/admin"
-        echo "   https://$BASE_URL/admin"
         echo ""
         echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP or Domain."
         echo ""
@@ -162,6 +163,7 @@ if systemctl is-active --quiet nginx; then
     else
         error "✖ Magento endpoint is not responding!"
         warn "⚠ Check nginx config or PHP-FPM status."
+        echo "   Last HTTP status code: $HTTP_STATUS"
     fi
 
 else
