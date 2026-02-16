@@ -97,9 +97,8 @@ install_magento2() {
     " || return 1
 
     # ----------Magento setup install
-
-    if ! run_step "Running Magento setup install" bash -c "
-        cd \"$MAGENTO_DIR\" &&
+# run_step "Running Magento setup install" bash -c "    "
+    if ! cd \"$MAGENTO_DIR\" &&
         sudo -u "$REAL_USER" php bin/magento setup:install \
         --base-url=\"http://$BASE_URL\" \
         --db-host=localhost \
@@ -127,7 +126,7 @@ install_magento2() {
         --session-save=redis \
         --session-save-redis-host=127.0.0.1 \
         --session-save-redis-db=2
-    "
+
     then
         success "✔ Magento setup completed successfully"
     else
