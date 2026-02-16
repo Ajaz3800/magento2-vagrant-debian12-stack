@@ -44,7 +44,7 @@ setup_credentials() {
     warn "Magento2 configuration..."
     read -rp "Enter magento version (e.g., 2.4.6, 2.4.7, 2.4.8) [default: 2.4.8]: " MAG_VER
     MAG_VER=${MAG_VER:-2.4.8}
-    read -rp "Base URL [default: example.com]: " BASE_URL
+    read -rp "Enter Magento Domain [default: example.com]: " BASE_URL
     BASE_URL=${BASE_URL:-example.com}
     echo ""
 
@@ -71,13 +71,13 @@ setup_credentials() {
 
     warn "Magento setup configuration"
 
-    read -rp "Admin email [default: admin@example.com]: " ADMIN_EMAIL
+    read -rp "Magento Admin email [default: admin@example.com]: " ADMIN_EMAIL
     ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
 
-    read -rp "Admin username [default: admin]: " ADMIN_USER
+    read -rp "Magento Admin username [default: admin]: " ADMIN_USER
     ADMIN_USER=${ADMIN_USER:-admin}
 
-    read -rsp "Admin password [default: admin@123]: " ADMIN_PASS
+    read -rsp "Magento Admin password [default: admin@123]: " ADMIN_PASS
     ADMIN_PASS=${ADMIN_PASS:-admin@123}
     echo ""
 
