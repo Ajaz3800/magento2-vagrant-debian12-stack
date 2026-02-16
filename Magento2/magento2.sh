@@ -94,5 +94,23 @@ install_magento2() {
         return 1
     fi
 
+        # ---------- Magento post-install optimization ----------
+
+    if run_step "Running Magento post-install tasks" bash -c "
+        cd \"$MAGENTO_DIR\" &&
+        php bin/magento indexer:reindex &&
+        php bin/magento setup:upgrade &&
+        php bin/magento setup:static-content:deploy -f &&
+        php bin/magento cache:flush &&
+        php bin/magento module:disable Magento_TwoFactorAuth Magento_AdminAdobeImsTwoFactorAuth
+    "
+    then
+        success "Magento post-install tasks completed"
+    else
+        error "Magento post-install tasks failed"
+        return 1
+    fi
+
+
     success "Magento 2 installed successfully!"
 }
