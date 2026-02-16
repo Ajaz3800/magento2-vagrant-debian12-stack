@@ -20,7 +20,7 @@ then
     # Enable & start service
     run_step "Configuring systemd service" bash -c "
         sudo systemctl daemon-reload &&
-        sudo systemctl enable elasticsearch.service &&
+        sudo systemctl enable elasticsearch.service
     "
 
     # Interactive configuration
@@ -62,7 +62,7 @@ then
     # Reload & restart Elasticsearch
     run_step "Reloading systemd & restarting Elasticsearch" bash -c "
         sudo systemctl daemon-reload &&
-        sudo systemctl restart elasticsearch.service
+        sudo systemctl restart elasticsearch.service &&
         sudo systemctl start elasticsearch.service
     "
 
