@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Load libraries
-
 source ./lib/colors.sh
 source ./lib/logger.sh
 source ./lib/utils.sh
@@ -19,6 +18,9 @@ source ./phpmyadmin/phpmyadmin.sh
 source ./Composer/composer.sh
 source ./Magento2/magento2.sh
 
+# System config file
+source ./etc-hosts/hosts.sh
+source ./self_signed_ssl/self_signed_ssl.sh
 
 
 main() {
@@ -61,48 +63,11 @@ install_composer
 
 install_magento2
 
-warn "Updating /etc/hosts for $PMA_URL..."
-
-    local IP="127.0.0.1"
-    local HOSTS_FILE="/etc/hosts"
-
-    # Root check
-    if [[ $EUID -ne 0 ]]; then
-        error "This step requires root privileges"
-        return 1
-    fi
-
-    # Backup hosts file
-    cp "$HOSTS_FILE" "${HOSTS_FILE}.bak"
-
-    # Remove existing entry (if any)
-    sed -i "/[[:space:]]$PMA_URL$/d" "$HOSTS_FILE"
-
-    # Add new entry
-    echo "$IP    $PMA_URL" >> "$HOSTS_FILE"
-
-    success "/etc/hosts updated: $PMA_URL → $IP"
-
-warn "Updating /etc/hosts for $BASE_URL..."
-
-    # Root check
-    if [[ $EUID -ne 0 ]]; then
-        error "This step requires root privileges"
-        return 1
-    fi
-
-    # Backup hosts file
-    cp "$HOSTS_FILE" "${HOSTS_FILE}.bak"
-
-    # Remove existing entry (if any)
-    sed -i "/[[:space:]]$BASE_URL$/d" "$HOSTS_FILE"
-
-    # Add new entry
-    echo "$IP    $BASE_URL" >> "$HOSTS_FILE"
-
-    success "/etc/hosts updated: $BASE_URL → $IP"
+update_hosts_file
 
 #install_nginx
+
+generate_self_signed_ssl
 
 # 8️⃣ Test Elasticsearch
     echo ""
