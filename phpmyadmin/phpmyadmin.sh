@@ -55,7 +55,7 @@ install_phpmyadmin() {
 
     # 7️⃣ Permissions
     run_step "Setting permissions" bash -c "
-        chown -R www-data:www-data \"$BASE_DIR\"
+        chown -R $USER:www-data \"$BASE_DIR\"
         chmod -R 755 \"$BASE_DIR\"
     " || return 1
 
