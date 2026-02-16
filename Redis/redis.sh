@@ -2,11 +2,11 @@
 
 install_redis() {
     if dpkg -l redis-server | grep -q "^ii"; then
-        success "Redis is already installed"
+        success "✔ Redis is already installed"
         return 0
     fi
 
-    warn "Redis is not installed. I'm going to install it now."
+    warn "⚠ Redis is not installed. I'm going to install it now."
 
     # Install prerequisites, Redis, and start service
     if run_step "Installing Redis dependencies" retry 3 apt-get install -y lsb-release curl gpg &&
@@ -21,9 +21,9 @@ install_redis() {
         sudo systemctl start redis-server.service
     "
     then
-        success "Redis installed and running successfully"
+        success "✔ Redis installed and running successfully"
     else
-        error "Redis installation or service start failed"
+        error "✖ Redis installation or service start failed"
         exit 1
     fi
 }   
