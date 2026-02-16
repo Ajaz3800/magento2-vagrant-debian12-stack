@@ -44,11 +44,11 @@ check_command curl
 
 #info "Updating system packages..."
 
+setup_credentials
+
 run_step "Updating system packages" retry 3 apt-get update
 
 success "System updated successfully"
-
-setup_credentials
 
 install_mysql
 
