@@ -4,16 +4,16 @@ install_nginx() {
 
     # Install nginx only if missing
     if ! dpkg -l nginx | grep -q "^ii"; then
-        warn "Nginx is not installed. Installing now..."
+        warn "⚠ Nginx is not installed. Installing now..."
 
         if ! run_step "Installing Nginx" retry 3 apt-get install -y nginx; then
-            error "Failed to install Nginx"
+            error "✖ Failed to install Nginx"
             return 1
         fi
 
-        success "Nginx installed successfully"
+        success "✔ Nginx installed successfully"
     else
-        success "Nginx is already installed"
+        success "✔ Nginx is already installed"
     fi
 
 
@@ -23,7 +23,7 @@ install_nginx() {
     local enabled_config="/etc/nginx/sites-enabled/phpmyadmin.conf"
 
     if [[ ! -f "$src_config" ]]; then
-        error "phpMyAdmin config not found at $src_config"
+        error "✖ phpMyAdmin config not found at $src_config"
         return 1
     fi
 
@@ -40,7 +40,7 @@ install_nginx() {
         run_step "Enabling phpMyAdmin site" \
             ln -s "$dest_config" "$enabled_config" || return 1
     else
-        success "phpMyAdmin site already enabled"
+        success "✔ phpMyAdmin site already enabled"
     fi
 
 
@@ -50,7 +50,7 @@ install_nginx() {
     local magento_enabled="/etc/nginx/sites-enabled/magento2-back.conf"
 
     if [[ ! -f "$magento_sample" ]]; then
-        error "Magento sample config not found at $magento_sample"
+        error "✖ Magento sample config not found at $magento_sample"
         return 1
     fi
 
@@ -71,7 +71,7 @@ install_nginx() {
         run_step "Enabling Magento site" \
             ln -s "$magento_dest" "$magento_enabled" || return 1
     else
-        success "Magento site already enabled for varnish"
+        success "✔ Magento site already enabled for varnish"
     fi
 
     # Copy Magento 2 config-front
@@ -79,8 +79,8 @@ install_nginx() {
     local magento_dest_front="/etc/nginx/sites-available/magento2-front.conf"
     local magento_enabled_front="/etc/nginx/sites-enabled/magento2-front.conf"
 
-    if [[ ! -f "$magento_sample" ]]; then
-        error "Magento sample config not found at $magento_sample"
+    if [[ ! -f "$magento_sample_front" ]]; then
+        error "✖ Magento sample config not found at $magento_sample_front"
         return 1
     fi
 
@@ -101,13 +101,13 @@ install_nginx() {
         run_step "Enabling Magento site" \
             ln -s "$magento_dest_front" "$magento_enabled_front" || return 1
     else
-        success "Magento site already enabled for varnish"
+        success "✔ Magento site already enabled for varnish"
     fi
 
 
     # Test config
     if ! run_step "Testing Nginx configuration" nginx -t; then
-        error "Nginx configuration test failed"
+        error "✖ Nginx configuration test failed"
         return 1
     fi
 
@@ -116,6 +116,6 @@ install_nginx() {
     # Reload nginx
     run_step "Reloading Nginx" systemctl reload nginx || return 1
 
-    success "phpMyAdmin Nginx configuration applied successfully"
+    success "✔ phpMyAdmin Nginx configuration applied successfully"
 }
 
