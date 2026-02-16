@@ -61,6 +61,47 @@ install_composer
 
 install_magento2
 
+warn "Updating /etc/hosts for $PMA_URL..."
+
+    local IP="127.0.0.1"
+    local HOSTS_FILE="/etc/hosts"
+
+    # Root check
+    if [[ $EUID -ne 0 ]]; then
+        error "This step requires root privileges"
+        return 1
+    fi
+
+    # Backup hosts file
+    cp "$HOSTS_FILE" "${HOSTS_FILE}.bak"
+
+    # Remove existing entry (if any)
+    sed -i "/[[:space:]]$PMA_URL$/d" "$HOSTS_FILE"
+
+    # Add new entry
+    echo "$IP    $PMA_URL" >> "$HOSTS_FILE"
+
+    success "/etc/hosts updated: $PMA_URL → $IP"
+
+warn "Updating /etc/hosts for $BASE_URL..."
+
+    # Root check
+    if [[ $EUID -ne 0 ]]; then
+        error "This step requires root privileges"
+        return 1
+    fi
+
+    # Backup hosts file
+    cp "$HOSTS_FILE" "${HOSTS_FILE}.bak"
+
+    # Remove existing entry (if any)
+    sed -i "/[[:space:]]$BASE_URL$/d" "$HOSTS_FILE"
+
+    # Add new entry
+    echo "$IP    $BASE_URL" >> "$HOSTS_FILE"
+
+    success "/etc/hosts updated: $BASE_URL → $IP"
+
 #install_nginx
 
 # 8️⃣ Test Elasticsearch
@@ -114,13 +155,12 @@ SERVER_IP=$(hostname -I | awk '{print $1}')
 if systemctl is-active --quiet nginx; then
 
     # Test phpMyAdmin endpoint
-    if curl -s -o /dev/null -w "%{http_code}" http://localhost/phpmyadmin | grep -q "200"; then
+    if curl -s -o /dev/null -w "%{http_code}" $PMA_URL | grep -q "200"; then
 
         success "✔ phpMyAdmin is running!"
         echo "👉 Access phpMyAdmin in your browser:"
         echo ""
-        echo "   http://localhost/phpmyadmin"
-        echo "   http://${SERVER_IP}/phpmyadmin"
+        echo "   $PMA_URL"
         echo ""
         echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP."
         echo ""
