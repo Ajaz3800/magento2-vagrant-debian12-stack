@@ -1,7 +1,7 @@
 #!/bin/bash
 
 install_elasticsearch() {
-    if dpkg -l elasticsearch | grep -q "^ii" && systemctl is-active --quiet elasticsearch; then
+    if dpkg -l elasticsearch | grep -q "^ii"; then
         success "✔ Elasticsearch is already installed"
         return 0
     fi
