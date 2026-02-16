@@ -31,15 +31,6 @@ install_magento2() {
 
     warn "Magento 2 is not installed. Installing now..."
 
-    # --- Ask Magento credentials ---
-
-    echo ""
-    warn "Magento Marketplace authentication required"
-
-    read -rp "Enter Magento Public Key: " MAGENTO_PUBLIC
-    read -rsp "Enter Magento Private Key: " MAGENTO_PRIVATE
-    echo ""
-
     # --- Configure composer auth ---
 
     run_step "Configuring Composer authentication" bash -c "
@@ -62,11 +53,15 @@ install_magento2() {
         warn "Magento directory already exists"
     fi
 
-    # Set ownership
-    sudo chown -R "$USER":www-data "$MAGENTO_DIR" || {
-        error "Failed to set ownership"
-        return 1
+    # Detect real user (works with or without sudo)
+
+    # Set ownership correctly
+
+    sudo chown -R "$REAL_USER":www-data "$MAGENTO_DIR" || {
+    error "Failed to set ownership"
+    return 1
     }
+
 
     # Set permissions
     sudo chmod -R 775 "$MAGENTO_DIR" || {
@@ -79,7 +74,7 @@ install_magento2() {
 
 
     if run_step "Installing Magento 2 via Composer" bash -c "
-        composer create-project \
+        sudo -u "$REAL_USER" composer create-project \
         --repository-url=https://repo.magento.com/ \
         magento/project-community-edition=$MAG_VER \
         \"$MAGENTO_DIR\"
@@ -95,9 +90,9 @@ install_magento2() {
 
     run_step "Setting Magento permissions" bash -c "
         cd \"$MAGENTO_DIR\" &&
-        find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + &&
+        sudo -u "$REAL_USER" find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + &&
         find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + &&
-        chown -R $USER:www-data . &&
+        chown -R $REAL_USER:www-data . &&
         chmod -R 775 bin/magento
     " || return 1
 
@@ -105,7 +100,7 @@ install_magento2() {
 
     if ! run_step "Running Magento setup install" bash -c "
         cd \"$MAGENTO_DIR\" &&
-        php bin/magento setup:install \
+        sudo -u "$REAL_USER" php bin/magento setup:install \
         --base-url=\"http://$BASE_URL\" \
         --db-host=localhost \
         --db-name=\"$MYSQL_DB_NAME\" \
@@ -144,7 +139,7 @@ install_magento2() {
 
     if run_step "Running Magento post-install tasks" bash -c "
         cd \"$MAGENTO_DIR\" &&
-        php bin/magento indexer:reindex &&
+        sudo -u "$REAL_USER" php bin/magento indexer:reindex &&
         php bin/magento setup:upgrade &&
         php bin/magento setup:static-content:deploy -f &&
         php bin/magento cache:flush &&
