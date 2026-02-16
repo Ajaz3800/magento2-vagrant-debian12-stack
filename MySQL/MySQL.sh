@@ -20,8 +20,14 @@ install_mysql() {
 
         success "MySQL 8 installed successfully"
     fi
- # 3️⃣ Configure MySQL root password
-    warn "Configuring MySQL root user..."
+
+    warn "Checking MySQL root authentication..."
+
+    if mysql -u root -p"$MYSQL_ROOT_PASS" -e "SELECT 1;" &>/dev/null; then
+        success "✔ MySQL root login works. Skipping password configuration."
+    else
+        warn "Root login failed. Configuring MySQL root password..."
+
     mysql <<MYSQL_ROOT
 ALTER USER 'root'@'localhost'
 IDENTIFIED WITH caching_sha2_password
@@ -29,15 +35,26 @@ BY '$MYSQL_ROOT_PASS';
 FLUSH PRIVILEGES;
 MYSQL_ROOT
 
-    if [[ $? -ne 0 ]]; then
-        error "Failed to configure MySQL root password"
+    if mysql -u root -p"$MYSQL_ROOT_PASS" -e "SELECT 1;" &>/dev/null; then
+        success "✔ MySQL root password configured successfully."
+    else
+        error "✖ Failed to configure MySQL root password!"
+        return 1
+    fi
+fi
+
+
+    # Create database + user (only if MySQL login works)
+
+    warn "Checking MySQL access before creating database..."
+
+    if ! mysql -u root -p"$MYSQL_ROOT_PASS" -e "SELECT 1;" &>/dev/null; then
+        error "✖ Cannot login to MySQL as root. Skipping DB setup."
         return 1
     fi
 
-    success "Root password configured"
-
-     # 4️⃣ Create database + user
     warn "Creating database and user..."
+
     mysql -u root -p"$MYSQL_ROOT_PASS" <<MYSQL_SCRIPT
 CREATE DATABASE IF NOT EXISTS \`$MYSQL_DB_NAME\`;
 CREATE USER IF NOT EXISTS '$MYSQL_DB_USER'@'localhost' IDENTIFIED BY '$MYSQL_DB_PASS';
@@ -45,14 +62,16 @@ GRANT ALL PRIVILEGES ON \`$MYSQL_DB_NAME\`.* TO '$MYSQL_DB_USER'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
-    if [[ $? -eq 0 ]]; then
-        success "Database and user created successfully"
+    # ✅ Verify DB access with new user
+    if mysql -u "$MYSQL_DB_USER" -p"$MYSQL_DB_PASS" -e "USE \`$MYSQL_DB_NAME\`;" &>/dev/null; then
+        success "✔ Database and user configured successfully."
     else
-        error "Failed to configure MySQL database"
+        error "✖ Database/user verification failed!"
         return 1
-    fi
+fi
 
-        # 5️⃣ Enable log_bin_trust_function_creators for Magento
+
+        # Enable log_bin_trust_function_creators for Magento
     warn "Configuring MySQL for Magento triggers..."
 
     local mysql_conf="/etc/mysql/mysql.conf.d/mysqld.cnf"
