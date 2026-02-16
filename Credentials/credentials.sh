@@ -48,6 +48,15 @@ setup_credentials() {
     BASE_URL=${BASE_URL:-example.com}
     echo ""
 
+     # --- Ask Magento credentials ---
+
+    echo ""
+    warn "Magento Marketplace authentication required"
+
+    read -rp "Enter Magento Public Key: " MAGENTO_PUBLIC
+    read -rsp "Enter Magento Private Key: " MAGENTO_PRIVATE
+    echo ""
+
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
