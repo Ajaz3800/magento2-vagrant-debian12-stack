@@ -11,11 +11,13 @@ generate_self_signed_ssl() {
 
     mkdir -p "$SSL_DIR"
 
-    openssl req -x509 -nodes -days 365 \
-        -newkey rsa:2048 \
-        -keyout "$KEY" \
-        -out "$CERT" \
-        -subj "/C=US/ST=State/L=City/O=Dev/CN=$PMA_URL"
+    run_step "Generating SSL certificate for phpMyAdmin" bash -c "
+         openssl req -x509 -nodes -days 365 \
+            -newkey rsa:2048 \
+            -keyout "$KEY" \
+            -out "$CERT" \
+            -subj "/C=US/ST=State/L=City/O=Dev/CN=$PMA_URL"
+    " || return 1
 
     if [[ $? -ne 0 ]]; then
         error "Failed to generate SSL certificate"
@@ -62,11 +64,13 @@ EOF
 
     mkdir -p "$SSL_DIR"
 
-    openssl req -x509 -nodes -days 365 \
-        -newkey rsa:2048 \
-        -keyout "$KEY" \
-        -out "$CERT" \
-        -subj "/C=US/ST=State/L=City/O=Dev/CN=$BASE_URL"
+    run_step "Generating SSL certificate for Magento 2" bash -c "
+         openssl req -x509 -nodes -days 365 \
+            -newkey rsa:2048 \
+            -keyout "$KEY" \
+            -out "$CERT" \
+            -subj "/C=US/ST=State/L=City/O=Dev/CN=$BASE_URL"
+    " || return 1
 
     if [[ $? -ne 0 ]]; then
         error "Failed to generate SSL certificate"
@@ -79,17 +83,32 @@ EOF
     warn "Updating nginx config..."
 
     cat > "$MAGENTO_CONF" <<EOF
+upstream fastcgi_backend {
+    server unix:/run/php/php$PHP_VER-fpm.sock;
+}
+
+# HTTP → HTTPS redirect ONLY
 server {
-    listen 443 ssl;
+    listen 80;
+    server_name $BASE_URL;
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS Magento
+server {
+    listen 443 ssl http2;
     server_name $BASE_URL;
 
     ssl_certificate $CERT;
     ssl_certificate_key $KEY;
 
-    root /var/www/html/magento2;
-    index index.php;
+    set $MAGE_ROOT /var/www/html/magento2;
+    set $MAGE_MODE production;
 
     include /var/www/html/magento2/nginx.conf.sample;
+
+    # Optional security headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 }
 EOF
 
@@ -102,6 +121,18 @@ EOF
     # Reload nginx
     warn "Reloading nginx..."
     nginx -t && systemctl reload nginx
+
+    # ✅ Update Magento base URLs to HTTPS
+    warn "Updating Magento base URLs to HTTPS..."
+    cd "$MAGENTO_DIR" || exit 1
+
+    php bin/magento config:set web/unsecure/base_url https://$BASE_URL/
+    php bin/magento config:set web/secure/base_url https://$BASE_URL/
+    php bin/magento config:set web/secure/use_in_frontend 1
+    php bin/magento config:set web/secure/use_in_adminhtml 1
+    php bin/magento cache:flush
+
+    success "Magento base URLs updated and cache flushed"
 
     success "SSL setup completed successfully!"
 }
