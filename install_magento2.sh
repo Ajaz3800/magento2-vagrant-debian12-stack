@@ -30,7 +30,6 @@ set -euo pipefail
 
 trap 'error "Script failed at line ${LINENO}"' ERR
 
-
 require_root
 check_network
 
