@@ -131,7 +131,7 @@ run_step() {
     shift
 
     CURRENT_STEP=$((CURRENT_STEP + 1))
-    local prefix="[${CURRENT_STEP}/${TOTAL_STEPS}] $message"
+    local prefix="[${CURRENT_STEP}] $message"
 
     local tmp_out
     tmp_out=$(mktemp)
