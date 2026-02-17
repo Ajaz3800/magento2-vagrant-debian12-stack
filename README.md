@@ -7,12 +7,18 @@ A complete Magento 2 installation and configuration lab built using **Vagrant + 
 
 ## 📌 Project Overview
 
-This lab automates the setup of a Magento 2 environment inside a virtual machine. It is designed for:
+This lab automates the setup of a Magento 2 environment. It performs the following tasks automatically:
 
-* Learning Magento infrastructure setup
-* DevOps practice
-* Portfolio demonstration
-* YouTube tutorial reference
+* Installs and configures **Nginx**, **PHP**, and **MySQL**
+* Installs **Magento 2** with required dependencies
+* Sets up **Redis** for caching and sessions
+* Configures **Varnish** for full-page caching
+* Installs and configures **phpMyAdmin**
+* Generates self-signed **SSL certificates**
+* Updates the system **hosts file** for local domain access
+* Applies proper permissions and performance optimizations
+
+The goal of this project is to provide a ready-to-use Magento development environment with minimal manual setup.
 
 ---
 
@@ -22,11 +28,27 @@ This lab automates the setup of a Magento 2 environment inside a virtual machine
 
 ---
 
-## ⚙️ Requirements
+## Install on Cloud or On-Premises (Debian 12)
+
+If you want to install the full Magento stack on any server running **Debian 12** (cloud or on-premises), follow these steps:
+
+Clone the repository and run the installer:
+
+```bash
+git clone https://github.com/Ajaz3800/magento2-vagrant-debian12-stack.git
+cd magento2-vagrant-debian12-stack
+sudo ./install_magento2.sh
+```
+
+This command will automatically install and configure the complete Magento stack.
+
+---
+
+## ⚙️ Requirements For Local Testing
 
 Before starting, install the following on your host machine:
 
-* VirtualBox
+* A virtualization provider (e.g., VirtualBox)
 * Vagrant
 * Git
 * Minimum 4 GB RAM recommended
@@ -35,16 +57,17 @@ Before starting, install the following on your host machine:
 
 ## 🚀 Quick Start
 
-### 1. Clone Repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/magento-lab.git
-cd magento-lab
+git clone https://github.com/your-username/magento2-vagrant-debian12-stack.git
+cd magento2-vagrant-debian12-stack
 ```
 
 ### 2. Start Virtual Machine
 
 ```bash
+cd magento2-vagrant-debian12-stack/vagrant
 vagrant up
 ```
 
@@ -54,77 +77,100 @@ vagrant up
 vagrant ssh
 ```
 
+### 4. Clone repo inside vm
+
+```bash
+git clone https://github.com/your-username/magento2-vagrant-debian12-stack.git
+```
+
+### 5. Run below script
+
+```bash
+cd magento2-vagrant-debian12-stack
+sudo ./install_magento2.sh
+```
 ---
 
-## 🌐 Local Domain Setup
+## Manual Installation (Step-by-Step)
 
-Edit your host machine’s hosts file:
+If you prefer installing components manually, follow the scripts in this order:
 
-### Linux / macOS
+### 1. Install MySQL
 
-```
-/etc/hosts
-```
-
-### Windows
-
-```
-C:\Windows\System32\drivers\etc\hosts
-```
-
-Add:
-
-```
-192.168.56.10 test.mgt.com
-192.168.56.10 pma.mgt.com
-```
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/MySQL
 
 ---
 
-## 🔐 Access URLs
+### 2. Install PHP 8.3
 
-* Magento Store: https://test.mgt.com
-* Magento Admin: https://test.mgt.com/admin
-* PHPMyAdmin: https://pma.mgt.com
-
-> Note: Self-signed SSL certificate is used.
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/php
 
 ---
 
-## 📂 Project Structure
+### 3. Install phpMyAdmin(optional)
 
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/phpmyadmin
+
+---
+
+### 4. Install Elasticsearch
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Elasticsearch
+
+---
+
+### 5. Install Redis
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Redis
+
+---
+
+### 6. Install Composer
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Composer
+
+---
+
+### 7. Install Magento 2
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Magento2
+
+---
+
+### 8. Upadate Host File (optional)
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/etc-hosts
+
+---
+
+### 9. Install Nginx & Configure
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Nginx
+
+---
+
+### 10. Install Varnish & Configure 
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/Varnish
+
+---
+
+### 11. Generate a self-signed Certificate
+
+👉 https://github.com/Ajaz3800/magento2-vagrant-debian12-stack/tree/main/self_signed_ssl
+
+---
+
+Run each script with:
+
+```bash
+sudo bash script_name.sh
 ```
-magento-lab/
-├── Vagrantfile
-├── setup.sh
-├── nginx/
-│   ├── magento.conf
-│   └── phpmyadmin.conf
-├── varnish/
-│   └── default.vcl
-├── docs/
-│   └── installation.md
-└── README.md
-```
 
 ---
 
-## 🛠️ Features Implemented
 
-* Debian 12 VM provisioning
-* Magento 2 installation with sample data
-* Elasticsearch integration
-* Redis for cache and sessions
-* Varnish full-page caching
-* NGINX virtual hosts
-* HTTPS with self-signed SSL
-* PHP-FPM custom pool
-* User and permission configuration
-* PHPMyAdmin setup
-
----
-
-## 🎥 Video Tutorial
+<!-- ## 🎥 Video Tutorial
 
 YouTube walkthrough:
 
@@ -132,17 +178,20 @@ YouTube walkthrough:
 [Add your YouTube video link here]
 ```
 
----
+--- -->
 
 ## 📸 Screenshots
 
-Add screenshots of:
+<p align="center">
+  <img src="assets/magento2-home.png" width="33%" />
+  <img src="assets/magento2-admin-1.png" width="33%" />
+  <img src="assets/magento2-admin-2.png" width="33%" />
+</p>
 
-* Magento homepage
-* Admin dashboard
-* PHPMyAdmin
-* Varnish status
-* NGINX configuration
+<p align="center">
+  <img src="assets/phpmyadmin-1.png" width="33%" />
+  <img src="assets/phpmyadmin-2.png" width="33%" />
+</p>
 
 ---
 
@@ -179,35 +228,14 @@ php bin/magento cache:flush
 
 ---
 
-## 📚 Documentation
-
-Detailed installation guide:
-
-```
-docs/installation.md
-```
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
 
 ## 👤 Author
 
-**Your Name**
+**Muhammad Ajaz**
 
-* GitHub: https://github.com/your-username
-* LinkedIn: [Add your LinkedIn]
-* YouTube: [Add your channel]
+* GitHub: https://github.com/Ajaz3800
+* LinkedIn: [https://www.linkedin.com/in/shaikh-muhammad-ajaz](https://www.linkedin.com/in/shaikh-muhammad-ajaz)
+* YouTube: [https://www.youtube.com/@devopswithajaz](https://www.youtube.com/@devopswithajaz)
 
 ---
 
