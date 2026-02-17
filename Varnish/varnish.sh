@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VARNISH_VCL="/etc/varnish/magento.vcl"
+VARNISH_VCL="/etc/varnish/default.vcl"
 MAGENTO_DEFAULT_CONF="/etc/nginx/sites-enabled/magento2-back.conf"
 
 setup_varnish_magento() {
