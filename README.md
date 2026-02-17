@@ -239,6 +239,17 @@ php bin/magento cache:flush
 
 ---
 
+<div align="center">
+  
+### 💡 "Turning ideas into production-ready systems."
+
+![Profile Views](https://komarev.com/ghpvc/?username=Ajaz3800&color=brightgreen&style=flat-square)
+[![GitHub followers](https://img.shields.io/github/followers/Ajaz3800?label=Follow&style=social)](https://github.com/Ajaz3800)
+
+</div>
+
+---
+
 ## ⭐ Support
 
 If you find this project helpful, please give it a star ⭐ on GitHub.
