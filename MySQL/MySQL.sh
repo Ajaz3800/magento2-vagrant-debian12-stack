@@ -23,7 +23,7 @@ install_mysql() {
 
     warn "⚠ Checking MySQL root authentication..."
 
-     if ! sudo -u "REAL_USER" mysql -u root -p"$MYSQL_ROOT_PASS" -e "SELECT 1;" &>/dev/null; then
+     if sudo -u "$REAL_USER" mysql -u root -p"$MYSQL_ROOT_PASS" -e "SELECT 1;" &>/dev/null; then
        success "✔ MySQL root login works. Skipping password configuration."
      else
         warn "⚠ Root login failed. Configuring MySQL root password..."
