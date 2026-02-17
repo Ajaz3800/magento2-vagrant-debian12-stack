@@ -68,9 +68,9 @@ update_hosts_file
 
 install_nginx
 
-generate_self_signed_ssl
-
 setup_varnish_magento
+
+generate_self_signed_ssl
 
 
 # 8️⃣ Test Elasticsearch
@@ -134,7 +134,7 @@ if systemctl is-active --quiet nginx; then
         echo "   http://$PMA_URL"
         echo "   https://$PMA_URL"
         echo ""
-        echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP."
+        success "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP."
         echo ""
 
     else
@@ -161,7 +161,7 @@ if systemctl is-active --quiet nginx; then
         echo "   http://$BASE_URL"
         echo "   https://$BASE_URL"
         echo ""
-        echo "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP or Domain."
+        success "${CYAN}Tip:${RESET} If this is a VPS/server, use the public IP or Domain."
         echo ""
 
     else
