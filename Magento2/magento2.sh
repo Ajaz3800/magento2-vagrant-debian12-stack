@@ -33,7 +33,7 @@ install_magento2() {
 
     # --- Configure composer auth ---
 
-    run_step "Configuring Composer authentication" bash -c "
+    run_step "Configuring Composer authentication" sudo -u "$REAL_USER" bash -c "
         composer config --global http-basic.repo.magento.com \
         \"$MAGENTO_PUBLIC\" \"$MAGENTO_PRIVATE\"
     " || return 1
