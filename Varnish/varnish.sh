@@ -33,24 +33,24 @@ setup_varnish_magento() {
 
     cd "$MAGENTO_DIR" || return 1
 
-    if run_step "Setting Magento to use Varnish" sudo -u "$REAL_USER" php bin/magento config:set system/full_page_cache/caching_application 2; then
+    if run_step "Setting Magento to use Varnish" sudo -u www-data php bin/magento config:set system/full_page_cache/caching_application 2; then
         success "✔ Magento set to use Varnish"
     else
         error "✖ Failed to configure Magento cache"
         return 1
     fi
 
-    if run_step "Flushing Magento cache" sudo -u "$REAL_USER" php bin/magento cache:flush; then
+    if run_step "Flushing Magento cache" sudo -u www-data php bin/magento cache:flush; then
         success "✔ Magento cache flushed"
     else
-        warn "⚠ Cache flush failed (continuing...)"
+        error "✖ Cache flush failed (continuing...)"
     fi
 
 
     # Generate Magento VCL safely
     warn "⚠ Generating Magento Varnish VCL..."
 
-    if sudo -u "$REAL_USER" php bin/magento varnish:vcl:generate | sudo tee "$VARNISH_VCL" >/dev/null; then
+    if sudo -u www-data php bin/magento varnish:vcl:generate | sudo tee "$VARNISH_VCL" >/dev/null; then
         success "✔ VCL generated at $VARNISH_VCL"
     else
         error "✖ Failed to generate VCL"
