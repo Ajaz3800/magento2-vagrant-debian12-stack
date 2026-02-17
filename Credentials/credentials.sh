@@ -57,6 +57,18 @@ setup_credentials() {
     read -rsp "Enter Magento Private Key: " MAGENTO_PRIVATE
     echo ""
 
+    # Export for current (root) session
+    export MAGENTO_PUBLIC MAGENTO_PRIVATE
+
+    # Also export for the normal user who invoked sudo
+    if [ -n "$SUDO_USER" ]; then
+        sudo -u "$SUDO_USER" sh -c "export MAGENTO_PUBLIC='$MAGENTO_PUBLIC'; export MAGENTO_PRIVATE='$MAGENTO_PRIVATE'"
+        
+        # Or append to user's shell config
+        echo "export MAGENTO_PUBLIC='$MAGENTO_PUBLIC'" >> /home/"$SUDO_USER"/.bashrc
+        echo "export MAGENTO_PRIVATE='$MAGENTO_PRIVATE'" >> /home/"$SUDO_USER"/.bashrc
+    fi
+
 
     # If credentials exist → load them
     if [[ -f "$cred_file" ]]; then
