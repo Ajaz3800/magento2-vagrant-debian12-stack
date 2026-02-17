@@ -27,13 +27,15 @@ then
     local es_config="/etc/elasticsearch/elasticsearch.yml"
     cp "$es_config" "${es_config}.bak"
 
-    # Remove existing config lines if present
+    # Remove and comment existing config lines if present
     sudo sed -i "/^node.name:/d" "$es_config"
     sudo sed -i "/^cluster.name:/d" "$es_config"
     sudo sed -i "/^network.host:/d" "$es_config"
     sudo sed -i "/^http.port:/d" "$es_config"
     sudo sed -i "/^xpack.security.enabled/d" "$es_config"
     sudo sed -i "/^xpack.security.enrollment.enabled:/d" "$es_config"
+    sudo sed -i 's/^[[:space:]]*cluster.initial_master_nodes:/# &/' "$es_config"
+    sudo sed -i 's/^[[:space:]]*http.host:/# &/' "$es_config"
 
     # Append user settings
     {
@@ -43,6 +45,7 @@ then
         echo "http.port: $HTTP_PORT"
         echo "xpack.security.enabled: false"
         echo "xpack.security.enrollment.enabled: false"
+        echo "discovery.type: single-node"
     } | sudo tee -a "$es_config" >/dev/null
 
     # Configure JVM heap size
