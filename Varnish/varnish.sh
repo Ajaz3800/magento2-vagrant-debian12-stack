@@ -16,7 +16,8 @@ setup_varnish_magento() {
         success "✔ Varnish is already installed."
     else
         warn "⚠ Varnish not found. Installing..."
-        run_step "Installing Varnish" retry 3 sudo apt-get update && sudo apt-get install varnish -y
+        run_step "Updating package list" retry 3 sudo apt-get update 
+        run_step "Installing Varnish" sudo apt-get install varnish -y
 
         # Check again
         if command -v varnishd &>/dev/null || [ -x /usr/sbin/varnishd ]; then
