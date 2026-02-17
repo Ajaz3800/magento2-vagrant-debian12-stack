@@ -8,8 +8,8 @@ setup_credentials() {
     read -rp "Enter Elasticsearch version to install (e.g., 7, 8) [default: 8]: " VER_ES
     VER_ES=${VER_ES:-8}
     
-    read -rp "Enter node.name [default: My First Node]: " NODE_NAME
-    NODE_NAME=${NODE_NAME:-"My First Node"}
+    read -rp "Enter node.name [default: MyFirstNode]: " NODE_NAME
+    NODE_NAME=${NODE_NAME:-"MyFirstNode"}
 
     read -rp "Enter cluster.name [default: my-application]: " CLUSTER_NAME
     CLUSTER_NAME=${CLUSTER_NAME:-"my-application"}
