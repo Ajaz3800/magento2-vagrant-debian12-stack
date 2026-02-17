@@ -98,7 +98,7 @@ install_magento2() {
 
     # ----------Magento setup install
 
-    if ! run_step "Running Magento setup install" sudo -u "$REAL_USER" bash -c '
+    if run_step "Running Magento setup install" sudo -u "$REAL_USER" bash -c '
         cd "'"$MAGENTO_DIR"'" || exit 1
         php bin/magento setup:install \
         --base-url=http://'"$BASE_URL"' \
