@@ -117,11 +117,11 @@ EOF
     warn "⚠ Updating Magento base URLs to HTTPS..."
     run_step "Updating Magento base URLs" bash -c "
          cd \"$MAGENTO_DIR\" || exit 1
-         sudo -u "$REAL_USER" php bin/magento config:set web/unsecure/base_url https://$BASE_URL/ &&
-         sudo -u "$REAL_USER" php bin/magento config:set web/secure/base_url https://$BASE_URL/ &&
-         sudo -u "$REAL_USER" php bin/magento config:set web/secure/use_in_frontend 1 &&
-         sudo -u "$REAL_USER" php bin/magento config:set web/secure/use_in_adminhtml 1 &&
-         sudo -u "$REAL_USER" php bin/magento cache:flush
+         sudo -u www-data php bin/magento config:set web/unsecure/base_url https://$BASE_URL/ &&
+         sudo -u www-data php bin/magento config:set web/secure/base_url https://$BASE_URL/ &&
+         sudo -u www-data php bin/magento config:set web/secure/use_in_frontend 1 &&
+         sudo -u www-data php bin/magento config:set web/secure/use_in_adminhtml 1 &&
+         sudo -u www-data php bin/magento cache:flush
     " || return 1
     # cd "$MAGENTO_DIR" || exit 1
 
