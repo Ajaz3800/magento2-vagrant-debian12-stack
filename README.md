@@ -228,14 +228,26 @@ php bin/magento cache:flush
 
 ---
 
+## ⭐ Support
 
-## 👤 Author
+If you find this project helpful, please give it a star ⭐ on GitHub.
 
-**Muhammad Ajaz**
+----
 
-* GitHub: https://github.com/Ajaz3800
-* LinkedIn: [https://www.linkedin.com/in/shaikh-muhammad-ajaz](https://www.linkedin.com/in/shaikh-muhammad-ajaz)
-* YouTube: [https://www.youtube.com/@devopswithajaz](https://www.youtube.com/@devopswithajaz)
+## 🌐 Connect With Me
+
+<div align="center">
+  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/shaikh-muhammad-ajaz)
+[![Email](https://img.shields.io/badge/Email-shaikhajaz38000@gmail.com-red?style=for-the-badge&logo=gmail&logoColor=white)](mailto:shaikhajaz38000@gmail.com)
+[![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge\&logo=youtube\&logoColor=white)](https://www.youtube.com/@devopswithajaz)
+</div>
+
+<div align="center">
+
+[![Upwork](https://img.shields.io/badge/Upwork-Hire%20Me-6FDA44?style=for-the-badge&logo=upwork&logoColor=white)](https://upwork.com/freelancers/muhammadajaz)
+[![Fiverr](https://img.shields.io/badge/Fiverr-Order%20Now-1DBF73?style=for-the-badge&logo=fiverr&logoColor=white)](https://www.fiverr.com/ajazshaikh3800)
+</div>
 
 ---
 
@@ -247,9 +259,3 @@ php bin/magento cache:flush
 [![GitHub followers](https://img.shields.io/github/followers/Ajaz3800?label=Follow&style=social)](https://github.com/Ajaz3800)
 
 </div>
-
----
-
-## ⭐ Support
-
-If you find this project helpful, please give it a star ⭐ on GitHub.
