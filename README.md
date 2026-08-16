@@ -25,7 +25,9 @@ The goal of this project is to provide a ready-to-use Magento development enviro
 ## 🧱 Architecture
 
 ![Magento 2 High-Performance Architecture on Debian 12 (Vagrant Lab Environment)](assets/demo-2.gif)
-
+![startup-Magento2-Infrastructure-AWS](assets/startup-magento2-infra.gif)
+![Small-Enterprise-Magento2-Infrastructure-AWS](assets/small-en-magento2-infra.gif)
+![Big-Enterprise-Magento2-Infrastructure-AWS](assets/big-en-magento2-infra.gif)
 ---
 
 ## Install on Cloud or On-Premises (Debian 12)
